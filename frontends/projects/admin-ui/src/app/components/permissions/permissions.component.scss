@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+}
+.filter {
+  width: 100%;
+}
+.empty-cell {
+  text-align: center;
+}
+.mat-column-ecg,
+.mat-column-eda,
+.mat-column-etk,
+.mat-column-mov {
+  width: 6em;
+  text-align: center;
+}

@@ -1,0 +1,22 @@
+<div class="info no-select">
+  <h1>Gesperrt</h1>
+  <p>Zum Entsperren bitte die beiden Punkte für {{ unlockTime / 1000 }} Sekunden gleichzeitig gedrückt halten oder auf der Tastatur STRG + ENTF drücken</p>
+</div>
+
+<app-unlock-button
+    class="unlock unlock-1"
+    [(locked)]="locked1"
+    (lockedChange)="checkLocked()">
+</app-unlock-button>
+<app-unlock-button
+    class="unlock unlock-2"
+    [(locked)]="locked2"
+    (lockedChange)="checkLocked()">
+</app-unlock-button>
+
+<svg class="arrow arrow-ld" viewBox="0 0 1009 1009" version="1.1">
+  <path d="M62.5,1008.89l441.942,-0c34.516,-0 62.5,-27.984 62.5,-62.5c-0,-34.517 -27.984,-62.5 -62.5,-62.5l-291.054,-0l777.191,-777.196c24.409,-24.405 24.409,-63.98 0,-88.388c-24.404,-24.404 -63.979,-24.404 -88.387,0l-777.192,777.196l0,-291.058c0,-34.517 -27.983,-62.5 -62.5,-62.5c-34.517,-0 -62.5,27.983 -62.5,62.5l0,441.941c0,34.521 27.983,62.505 62.5,62.505Z"/>
+</svg>
+<svg class="arrow arrow-ru" viewBox="0 0 1009 1009" version="1.1">
+  <path d="M946.385,0.001l-441.941,0c-34.517,0 -62.5,27.983 -62.5,62.5c-0,34.517 27.983,62.5 62.5,62.5l291.054,0l-777.192,777.196c-24.408,24.404 -24.408,63.979 0,88.387c24.404,24.405 63.979,24.405 88.388,0l777.191,-777.195l0,291.058c0,34.517 27.984,62.5 62.5,62.5c34.517,-0 62.5,-27.983 62.5,-62.5l0,-441.942c0,-34.521 -27.983,-62.504 -62.5,-62.504Z"/>
+</svg>

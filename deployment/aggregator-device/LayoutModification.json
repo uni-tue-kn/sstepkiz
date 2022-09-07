@@ -1,0 +1,22 @@
+{
+  "pinnedList": [
+    {
+      "desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Aggregator.lnk",
+      "caption": {
+        "default": "Aggregator"
+      }
+    },
+    {
+      "desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\Aggregator Update.lnk",
+      "caption": {
+        "default": "Aggregator Update"
+      }
+    },
+    {
+      "desktopAppLink": "%ALLUSERSPROFILE%\\Microsoft\\Windows\\Start Menu\\Programs\\TeamViewer.lnk",
+      "caption": {
+        "default": "TeamViewer"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<span *ngIf="!browserSupported">Browser not supported! Please use Google Chrome or Microsoft Edge!</span>
+<ng-container *ngIf="browserSupported">
+  <header>
+    <mat-toolbar color="primary">
+      <span><img class="logo" alt="SSTeP-KiZ" src="/assets/sstepkiz_logo.svg" height="16">Aggregator UI</span>
+
+      <span class="fill"></span>
+
+      <button mat-icon-button matTooltip="Bildschirm sperren" (click)="locked = true">
+        <mat-icon>lock</mat-icon>
+      </button>
+    </mat-toolbar>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-lock *ngIf="locked" [(locked)]="locked"></app-lock>
+</ng-container>

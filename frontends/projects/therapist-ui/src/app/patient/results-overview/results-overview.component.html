@@ -1,0 +1,11 @@
+<div class="container text-center">
+  <app-title title="Ergebnisse" [text]="text"></app-title>
+ 
+  <ul class="list-group shadow bg-white rounded border border-secondary list mx-auto">
+    <li class="list-group-item" *ngFor="let element of listContextResults">
+            <button [routerLink]="routerLinkResults" (click)="show(element)" class="text-left m-auto clear-btn">
+                {{element.name}}</button>
+    </li>
+</ul>
+<button [routerLink]="routerLinkBack" class="mt-5  mb-5 btn col-2">Zurück</button>
+</div>

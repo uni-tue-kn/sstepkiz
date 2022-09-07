@@ -1,0 +1,59 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+
+  To learn more about this file see: https://angular.io/config/solution-tsconfig.
+*/
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/admin-ui/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/admin-ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/patient-ui/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/patient-ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/therapist-ui/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/therapist-ui/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/aggregator-ui/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/aggregator-ui/tsconfig.spec.json"
+	},
+	{
+      "path": "./projects/aggregator/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/aggregator/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/auth/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/auth/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/rtc/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/rtc/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/sync/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/sync/tsconfig.spec.json"
+    }
+  ]
+}

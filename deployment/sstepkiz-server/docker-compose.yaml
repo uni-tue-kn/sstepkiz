@@ -1,0 +1,291 @@
+version: '3.9'
+
+services:
+  proxy:            # Traefik reverse proxy.
+    build:                                                                              # Use image with prepared configuration file.
+      context: ./proxy/
+      dockerfile: proxy.dockerfile
+    restart: always                                                                     # Always restart the service.
+    ports:
+      - ${HTTP_PORT}:80/tcp                                                             # HTTP port.
+      - ${HTTPS_PORT}:443/tcp                                                           # HTTPS port.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    command:
+      - "--accesslog=true"                                                              # Enables access logging (to stdout by default).
+      - "--certificatesresolvers.letsencrypt.acme.email=${TLS_EMAIL}"                   # E-Mail address for Let's Encrypt status mails.
+      - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json"  # File to store Let's Encrypt certificates.
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"                    # Enables Let's Encrypt ACME TLS Challenge.
+      - "--entrypoints.web.address=:80"                                                 # HTTP entrypoint.
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"                   # Redirect HTTP to HTTPS.
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"                   # Redirect HTTP to HTTPS.
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"                   # Redirect HTTP to HTTPS.
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"                   # Redirect HTTP to HTTPS.
+      - "--entrypoints.websecure.address=:443"                                          # HTTPS entrypoint.
+      - "--providers.docker=true"                                                       # Enables config extension with docker labels.
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"                       # Docker socket to listen for configuration labels.
+      - "--providers.docker.exposedbydefault=false"                                     # Disable auto exposure of containers.
+      - "--providers.file.filename=/etc/traefik/config.yaml"                            # Config file for shared file providers.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro                                    # Docker socket.
+      - proxy_acme_data:/etc/traefik/acme                                               # Let's Encrypt certificate storage.
+  db:               # Application database.
+    image: postgres:13-alpine                                                           # Minimal PostgreSQL image.
+    restart: always                                                                     # Always restart the service.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - POSTGRES_DB_FILE=/run/secrets/db_name                                           # Secret containing database name.
+      - POSTGRES_USER_FILE=/run/secrets/db_username                                     # Secret containing username.
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password                                 # Secret containing password.
+    secrets:
+      - db_name                                                                         # Database name secret of database.
+      - db_username                                                                     # Username secret of database.
+      - db_password                                                                     # Password secret of database.
+    volumes:
+      - db_data:/var/lib/postgresql/data                                                # Storage of database.    
+  signalling:       # Signalling Server.
+    build:                                                                              # Use image of Signalling Server.
+      context: ../../
+      dockerfile: signalling.dockerfile
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - db                                                                              # For database access.
+      - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - DB_HOST=db                                                                      # Hostname of database server.
+      - DB_NAME_FILE=/run/secrets/db_name                                               # Secret containing database name.
+      - DB_USER_FILE=/run/secrets/db_username                                           # Secret containing database username.
+      - DB_PASS_FILE=/run/secrets/db_password                                           # Secret containing database password.
+      - DB_PREFIX=signalling_                                                           # Database table prefix.
+      - LOG_LEVEL=5                                                                     # Log level 3 = errors, warnings and logs.
+      - OIDC_ISSUER=${SSO_ISSUER}                                                       # Endpoint of SSO.
+      - OIDC_PUBLIC_KEY_FILE=/home/app/sso_public_key.pem                               # Public Key of SSO.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.signalling.headers.customResponseHeaders.Cache-Control=no-cache" # Disable caching.
+      - "traefik.http.middlewares.signalling.headers.accessControlAllowHeaders=Accept, Authorization, Content-Type"  # Allowed XHR headers.
+      - "traefik.http.middlewares.signalling.headers.accessControlAllowMethods=DELETE, GET, OPTIONS, POST, PUT" # Allowed XHR methods.
+      - "traefik.http.middlewares.signalling.headers.accessControlAllowOriginList=https://${ADMIN_DOMAIN},https://${PATIENT_DOMAIN},https://${THERAPIST_DOMAIN}"  # Allowed XHR sources.
+      - "traefik.http.middlewares.signalling.headers.accessControlMaxAge=60"            # AC-header cache duration in seconds.
+      - "traefik.http.middlewares.signalling.headers.addVaryHeader=true"                # Prevent caching of Access-Control-Allow-Origin header for preflight.
+      - "traefik.http.middlewares.signalling.headers.contentSecurityPolicy=base-uri 'none';default-src 'none';form-action 'none';frame-ancestors 'none'"  # CSP Header.
+      - "traefik.http.middlewares.signalling.headers.sslHost=${SIGNALLING_DOMAIN}"      # Host to redirect for SSL.
+      - "traefik.http.routers.signalling.entrypoints=web,websecure"                     # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.signalling.middlewares=secHeaders@file,gzip@file,signalling@docker"  # Enable middlewares.
+      - "traefik.http.routers.signalling.rule=Host(`${SIGNALLING_DOMAIN}`)"             # Host to listen for.
+      - "traefik.http.routers.signalling.tls.certresolver=letsencrypt"                  # Use Let's Encrypt certificates.
+    secrets:
+      - db_name                                                                         # Database name secret of database.
+      - db_username                                                                     # Username secret of database.
+      - db_password                                                                     # Password secret of database.
+    volumes:
+      - ${PWD}/${SECRETS_DIR}/sso_public_key.pem:/home/app/sso_public_key.pem:ro        # Public Key of SSO.
+  gamification:     # Gamification Server.
+    build:                                                                              # Use image of Gamification Server.
+      context: ../../
+      dockerfile: gamification.dockerfile
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - db                                                                              # For database access.
+      - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - DB_HOST=db                                                                      # Hostname of database server.
+      - DB_NAME_FILE=/run/secrets/db_name                                               # Secret containing database name.
+      - DB_USER_FILE=/run/secrets/db_username                                           # Secret containing database username.
+      - DB_PASS_FILE=/run/secrets/db_password                                           # Secret containing database password.
+      - DB_PREFIX=gamification_                                                         # Database table prefix.
+      - LOG_LEVEL=3                                                                     # Log level 3 = errors, warnings and logs.
+      - OIDC_ISSUER=${SSO_ISSUER}                                                       # Endpoint of SSO.
+      - OIDC_PUBLIC_KEY_FILE=/home/app/sso_public_key.pem                               # Public Key of SSO.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.gamification.headers.customResponseHeaders.Cache-Control=no-cache" # Disable caching.
+      - "traefik.http.middlewares.gamification.headers.accessControlAllowHeaders=Accept, Authorization, Content-Type"  # Allowed XHR headers.
+      - "traefik.http.middlewares.gamification.headers.accessControlAllowMethods=DELETE, GET, OPTIONS, POST, PUT" # Allowed XHR methods.
+      - "traefik.http.middlewares.gamification.headers.accessControlAllowOriginList=https://${ADMIN_DOMAIN},https://${PATIENT_DOMAIN}"  # Allowed XHR sources.
+      - "traefik.http.middlewares.gamification.headers.accessControlMaxAge=60"          # AC-header cache duration in seconds.
+      - "traefik.http.middlewares.gamification.headers.addVaryHeader=true"              # Prevent caching of Access-Control-Allow-Origin header for preflight.
+      - "traefik.http.middlewares.gamification.headers.contentSecurityPolicy=base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'" # CSP Header.
+      - "traefik.http.middlewares.gamification.headers.sslHost=${GAMIFICATION_DOMAIN}"  # Host to redirect for SSL.
+      - "traefik.http.routers.gamification.entrypoints=web,websecure"                   # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.gamification.middlewares=secHeaders@file,gzip@file,gamification@docker"  # Enable middlewares.
+      - "traefik.http.routers.gamification.rule=Host(`${GAMIFICATION_DOMAIN}`)"         # Host to listen for.
+      - "traefik.http.routers.gamification.tls.certresolver=letsencrypt"                # Use Let's Encrypt certificates.
+    secrets:
+      - db_name                                                                         # Database name secret of database.
+      - db_username                                                                     # Username secret of database.
+      - db_password                                                                     # Password secret of database.
+    volumes:
+      - ${PWD}/${SECRETS_DIR}/sso_public_key.pem:/home/app/sso_public_key.pem:ro        # Public Key of SSO.
+  turn:             # STUN/TURN Server.
+    build:                                                                              # Use image of coturn server.
+      context: ./turn/
+      dockerfile: turn.dockerfile
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - proxy                                                                           # Requires reverse proxy for ACME challenge.
+    network_mode: "host"                                                                # Recommended because of bad docker performance with large port ranges.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - DOMAIN_NAME=${TURN_DOMAIN}                                                      # Domain name to use certificate of.
+      - ACME_FILE=/etc/coturn/acme/acme.json                                            # acme.json file from reverse proxy containing certificate and private key.
+      - TLS_CERT_RESOLVER=letsencrypt                                                   # Name of traefik's certificate resolver.
+      - CERTIFICATE_FILE=/etc/coturn/tls/cert.pem                                       # Path to certificate file.
+      - PRIVATE_KEY_FILE=/etc/coturn/tls/pkey.pem                                       # Path to private key file.
+      - DH_KEY_FILE=/etc/coturn/dh/dh_key.pem                                           # Diffie Hellman key file (will be generated if not exists).
+      - DH_KEY_LENGTH=4096                                                              # Length of Diffie Hellman key to generate.
+    command:
+      # Basic configuration:
+      - "-n"                                                                            # Do not use configuration file.
+      - "--no-cli"                                                                      # Disable interactive CLI.
+      - "--pidfile=/var/run/coturn/turnserver.pid"                                      # File to store process ID.
+      - "--proc-user=turnserver"                                                        # User ID.
+      - "--userdb=/var/lib/coturn/turndb"                                               # Create SQLite user database.
+      # Production mode:
+      - "--no-software-attribute"                                                       # Hide software version.
+      # Logging:
+      - "--verbose"                                                                     # Moderate verbose mode.
+      - "--log-file=stdout"                                                             # Log to stdout.
+      # Connection:
+      - "--external-ip=$$EXTERNAL_IP"                                                   # Bind to the external IPv4 address.
+      # - "--external-ip=$$EXTERNAL_IP6"                                                  # Bind to the external IPv6 address.
+      - "--listening-ip=$$EXTERNAL_IP"                                                  # IPv4 address to listen for.
+      # - "--listening-ip=$$EXTERNAL_IP6"                                                 # IPv6 address to listen for.
+      - "--listening-port=${TURN_PORT}"                                                 # TURN listening port for TCP and UDP ((D)TLS sessions can connect too).
+      - "--no-multicast-peers"                                                          # Disallow peers on well-known broadcast addresses.
+      - "--mobility"                                                                    # Enable mobility with ICE (MICE) support.
+      # Quota:
+      - "--min-port=${TURN_MIN_PORT}"                                                   # Lower bound of UDP relay port range (default: 49152).
+      - "--max-port=${TURN_MAX_PORT}"                                                   # Upper bound of UDP relay port range (default: 65535).
+      - "--bps-capacity=67108864"                                                       # Maximum bandwidth of server (= 512 Mbit/s) to use.
+      - "--max-bps=2097152"                                                             # Maximum bandwidth of a TURN session (= 16 Mbit/s) to use. TODO: Adjust this value.
+      - "--total-quota=100"                                                             # Maximum number of TURN sessions in total. TODO: Maybe adjust this value.
+      # - "--user-quota=5"                                                                # Maximum number of TURN sessions per user (can be set in database too). TODO: Maybe activate this value.
+      - "--max-allocate-timeout=30"                                                     # Maximum time for allocation establishment in s (default: 60s). TODO: Maybe decrease this value
+      # Enable WebRTC:
+      - "--fingerprint"                                                                 # Add fingerprints to TURN messages (required for WebRTC).
+      - "--lt-cred-mech"                                                                # Use long-term credential mechanisms (required for WebRTC, requires --realm option).
+      - "--realm=${TURN_DOMAIN}"                                                        # Default realm to use.
+      # Authentication:
+      # - "--secure-stun"                                                                 # Require authentication for STUN too.
+      # Security improvements:
+      - "--check-origin-consistency"                                                    # Checks if session's ORIGIN is consistent.
+      - "--ec-curve-name=secp384r1"
+      # - "--stale-nonce=60"                                                              # Use nonce value of limited lifetime in s (default: 600s). TODO: Adjust this value.
+      # - "--max-allocate-lifetime=120"                                                   # Maximum lifetime of allocations (default: 3600s). TODO: Adjust this value.
+      # - "--channel-lifetime=180"                                                        # Maximum lifetime of a channel binding (default: 300s). TODO: Adjust this value.
+      # - "--permission-lifetime=240"                                                     # Maximum lifetime of a permission (default: 300). TODO: Adjust this value.
+      # - "--allowed-peer-ip=0.0.0.0-255.255.255.255"                                     # Allows all IPv4 peers.
+      # - "--allowed-peer-ip=::/0"                                                        # Allows all IPv6 peers.
+      # Static users:
+      - "--user=stunuser:stunpassword"                                            # Static user.
+      # Use (D)TLS:
+      - "--tls-listening-port=${TURNS_PORT}"                                            # TURN listening port for (D)TLS (plain TCP and UDP sessions can connect too).
+      - "--cert=$${CERTIFICATE_FILE}"                                                   # Certificate file in PEM format (default: turn_server_cert.pem).
+      - "--pkey=$${PRIVATE_KEY_FILE}"                                                   # Private key file in PEM format (default: turn_server_pkey.pem).
+      - "--cipher-list=${TURNS_CIPHER_SUITES}"                                          # Allowed TLS cipher suits.
+      - "--dh-file=$${DH_KEY_FILE}"                                                      # Diffie Hellman key parameter file.
+      - "--no-tlsv1"                                                                    # Disable unsafe TLS 1.0 and DTLS 1.0
+      - "--no-tlsv1_1"                                                                  # Disable unsafe TLS 1.1
+      # Force (D)TLS:
+      - "--no-udp"                                                                      # Disable plane UDP.
+      - "--no-tcp"                                                                      # Disable plane TCP.
+    volumes:
+      - proxy_acme_data:/etc/coturn/acme:ro                                             # acme.json containing TLS certificate and private key.
+      - turn_dh:/etc/coturn/dh                                                          # dh_key.pem containing Diffie Hellman Key parameters.
+  admin:            # SSteP-KiZ Administration's User Interface.
+    build:                                                                              # Use image of Admin UI server.
+      context: ../../
+      dockerfile: admin-ui.dockerfile
+      args:                                                                             # Build arguments to compile into the application.
+        GAMIFICATION_DOMAIN: ${GAMIFICATION_DOMAIN}                                     # Domain of Gamification Server.
+        SIGNALLING_DOMAIN: ${SIGNALLING_DOMAIN}                                         # Domain of Signalling Server.
+        SSO_ISSUER: ${SSO_ISSUER}                                                       # SSO endpoint.
+        SSO_BACKEND: ${SSO_BACKEND}                                                     # SSO backend.
+        CLIENT_ID: ${CLIENT_ID_ADMIN}                                                   # OAuth Client ID.
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.admin.headers.sslHost=${ADMIN_DOMAIN}"                # Host to redirect for SSL.
+      # - "traefik.http.middlewares.admin.headers.contentSecurityPolicy=base-uri 'self'; connect-src 'self' https://${GAMIFICATION_DOMAIN} https://${SIGNALLING_DOMAIN} https://${SSO_DOMAIN}; default-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com" # CSP Header.
+      - "traefik.http.middlewares.admin2.ipwhitelist.sourcerange=${DMZ_RANGE}"          # Range of allowed source IP addresses.
+      - "traefik.http.routers.admin.entrypoints=web,websecure"                          # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.admin.middlewares=secHeaders@file,gzip@file,admin@docker,admin2@docker" # Enable middlewares.
+      - "traefik.http.routers.admin.rule=Host(`${ADMIN_DOMAIN}`)"                       # Host to listen for.
+      - "traefik.http.routers.admin.tls.certresolver=letsencrypt"                       # Use Let's Encrypt certificates.
+  patient:          # Patient's User Interface.
+    build:                                                                              # Use image of Patient UI server.
+      context: ../../
+      dockerfile: patient-ui.dockerfile
+      args:                                                                             # Build arguments to compile into the application.
+        GAMIFICATION_DOMAIN: ${GAMIFICATION_DOMAIN}                                     # Domain of Gamification Server.
+        IMERA_DOMAIN: ${IMERA_DOMAIN}                                                   # Domain of IMeRa Server.
+        SIGNALLING_DOMAIN: ${SIGNALLING_DOMAIN}                                         # Domain of Signalling Server.
+        SSO_ISSUER: ${SSO_ISSUER}                                                       # SSO endpoint.
+        CLIENT_ID: ${CLIENT_ID_PATIENT}                                                 # OAuth Client ID.
+        TURN_DOMAIN: ${TURN_DOMAIN}:${TURNS_PORT}                                       # Domain of TURN Server.
+        STUN_DOMAIN: ${TURN_DOMAIN}:${TURN_PORT}                                        # Domain of STUN Server.
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.patient.headers.sslHost=${PATIENT_DOMAIN}"            # Host to redirect for SSL.#
+      - "traefik.http.middlewares.patient.headers.contentSecurityPolicy=base-uri 'self'; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://${GAMIFICATION_DOMAIN} https://${IMERA_DOMAIN} wss://${SIGNALLING_DOMAIN} https://${SSO_DOMAIN}; default-src 'none'; font-src https://fonts.gstatic.com; form-action 'self'; frame-ancestors 'none'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com" # CSP Header.
+      - "traefik.http.routers.patient.entrypoints=web,websecure"                        # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.patient.middlewares=secHeaders@file,gzip@file,patient@docker" # Enable middlewares.
+      - "traefik.http.routers.patient.rule=Host(`${PATIENT_DOMAIN}`)"                   # Host to listen for.
+      - "traefik.http.routers.patient.tls.certresolver=letsencrypt"                     # Use Let's Encrypt certificates.
+  therapist:        # Therapist's User Interface
+    build:                                                                              # Use image of Therapist UI server.
+      context: ../../
+      dockerfile: therapist-ui.dockerfile
+      args:                                                                             # Build arguments to compile into the application.
+        IMERA_DOMAIN: ${IMERA_DOMAIN}                                                   # Domain of IMeRa Server.
+        SIGNALLING_DOMAIN: ${SIGNALLING_DOMAIN}                                         # Domain of Signalling Server.
+        SSO_ISSUER: ${SSO_ISSUER}                                                       # SSO endpoint.
+        CLIENT_ID: ${CLIENT_ID_THERAPIST}                                               # OAuth Client ID.
+        TURN_DOMAIN: ${TURN_DOMAIN}:${TURNS_PORT}                                       # Domain of TURN Server.
+        STUN_DOMAIN: ${TURN_DOMAIN}:${TURN_PORT}                                        # Domain of STUN Server.
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - proxy
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.therapist.headers.sslHost=${THERAPIST_DOMAIN}"        # Host to redirect for SSL.
+      - "traefik.http.middlewares.therapist.headers.contentSecurityPolicy=base-uri 'self'; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://${IMERA_DOMAIN} wss://${SIGNALLING_DOMAIN} https://${SSO_DOMAIN}; default-src 'none'; font-src https://fonts.gstatic.com; form-action 'self'; frame-ancestors 'none'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com" # CSP Header.
+      - "traefik.http.routers.therapist.entrypoints=web,websecure"                      # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.therapist.middlewares=secHeaders@file,gzip@file,therapist@docker" # Enable middlewares.
+      - "traefik.http.routers.therapist.rule=Host(`${THERAPIST_DOMAIN}`)"               # Host to listen for.
+      - "traefik.http.routers.therapist.tls.certresolver=letsencrypt"                   # Use Let's Encrypt certificates.
+
+secrets:
+  db_name:          # Secret of database name.
+    file: ${SECRETS_DIR}/db_name.txt
+  db_username:      # Secret of database username.
+    file: ${SECRETS_DIR}/db_username.txt
+  db_password:      # Secret of database password.
+    file: ${SECRETS_DIR}/db_password.txt
+
+volumes:
+  db_data:          # Persistent data of volumes.
+  proxy_acme_data:  # Persistent data of Let's Encrypt TLS certificates.
+  turn_dh:          # Persistent Diffie Hellman parameters.
+
+networks:
+  default:
+    driver: bridge

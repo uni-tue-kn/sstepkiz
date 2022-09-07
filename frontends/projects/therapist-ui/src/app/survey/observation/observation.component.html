@@ -1,0 +1,145 @@
+<div class="container">
+  <p>{{ currentObservation.id }}</p>
+  <div (click)="onNoClick()" class="m-auto text-right pointer">X</div>
+  <app-title class="text-center" [title]="title"></app-title>
+  <mat-dialog-content>
+    <form #questionForm="ngForm">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="question">Frage</label>
+            <input
+              [disabled]="context.published"
+              type="text"
+              name="question"
+              class="form-control ng-untouched ng-pristine ng-valid"
+              placeholder="Frage Text"
+              [(ngModel)]="currentObservation.text"
+              #question
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="answertype">Antworten Typ</label>
+            <select (ngModelChange)="onTypeChanged($event)" [(ngModel)]="currentObservation.dataType" class="form-control ng-untouched ng-pristine ng-valid" name="answertype">
+              <option *ngFor="let opt of types" [ngValue]="opt.typ">{{ opt.title }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input [disabled]="context.published" class="form-group mr-3" type="checkbox" [(ngModel)]="currentObservation.optional" name="optional" />
+            <label for="optional">Optional</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <p class="mb-2">Antwort Möglichkeiten</p>
+          <div class="mb-5">
+            <div *ngIf="currentObservation.dataType == 'Option' || currentObservation.dataType == 'Integer'">
+              <div *ngIf="currentObservation.dataType == 'Option'">
+                <input [disabled]="context.published" class="form-group mr-3" type="checkbox" [(ngModel)]="currentObservation.flag_singlechoice" name="flag_singlechoice" />
+                <label for="flag_singlechoice">Single Choice</label>
+              </div>
+              <ul cdkDropList (cdkDropListDropped)="drop($event)" class="list-group bg-white rounded border border-secondary list mx-auto">
+                <li class="list-group-item" *ngFor="let element of options; index as i" cdkDrag>
+                  <div class="d-flex">
+                    <div class="form-group row p-1">
+                      <div class="col-7 p-1">
+                        <label for="'answerOptions'+i">Antwort</label>
+                        <input
+                          [disabled]="context.published"
+                          type="text"
+                          class="form-control"
+                          [name]="'answerOptions' + i"
+                          placeholder="Antwort Möglichkeit"
+                          [(ngModel)]="options[i].textValue"
+                        />
+                      </div>
+                      <div class="col-3 p-1">
+                        <label for="'answerOptionsValue'+i">Wert</label>
+                        <input
+                          [disabled]="context.published"
+                          type="number"
+                          class="form-control"
+                          [name]="'answerOptionsValue' + i"
+                          [(ngModel)]="options[i].numberValue"
+                          placeholder="Wert"
+                        />
+                      </div>
+                      <div *ngIf="!context.published" class="row m-auto">
+                        <button class="clear-btn">
+                          <img class="mr-1 pt-1" (click)="copy(element)" src="../../assets/copy.svg" height="20" width="20" alt="Kopieren" />
+                        </button>
+                        <button class="clear-btn" (click)="remove(i)">X</button>
+                      </div>
+                      <div *ngIf="currentObservation.flag_singlechoice" class="p-1">
+                        <label for="'nextObservation'+i">Nächste Frage</label>
+                        <!-- <select [(ngModel)]="listElements[i].nextObservation" [name]="'nextObservation'+i">
+                        <option *ngFor= "let observation of listElements" 
+                        [ngValue]="observation.internID">{{observation.internID}}</option>
+                      </select> -->
+                        <input
+                          [disabled]="context.published"
+                          type="number"
+                          min="1"
+                          class="form-control"
+                          [name]="'nextObservation' + i"
+                          [(ngModel)]="options[i].nextObservation.observationNumber"
+                          placeholder="Fragenummer"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item text-center" cdkDrag (click)="newElement()"><button class="clear-btn">+</button></li>
+              </ul>
+            </div>
+            <div *ngIf="currentObservation.dataType == 'Double'">
+              <div class="form-group">
+                <div class="row">
+                  <div class="pb-2 col-8">
+                    <!--Use options 0 and 1 for the lower and upperBound -->
+                    <input
+                      [disabled]="context.published"
+                      [disabled]="context.published"
+                      [(ngModel)]="options[0].textValue"
+                      type="text"
+                      class="form-control"
+                      name="mintext"
+                      placeholder="Text Minimalwert"
+                    />
+                  </div>
+                  <div class="col-4">
+                    <input
+                      [disabled]="context.published"
+                      [disabled]="context.published"
+                      [(ngModel)]="options[0].numberValue"
+                      type="number"
+                      class="form-control"
+                      name="minvalue"
+                      placeholder="Minimal"
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-8">
+                    <input [disabled]="context.published" [(ngModel)]="options[1].textValue" type="text" class="form-control" name="maxtext" placeholder="Text Maximalwert" />
+                  </div>
+                  <div class="col-4">
+                    <input [disabled]="context.published" [(ngModel)]="options[1].numberValue" type="number" class="form-control" name="maxvalue" placeholder="Maximal" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <div mat-dialog-actions class="row justify-content-around mt-5">
+    <div class="col-4">
+      <button mat-button class="btn" (click)="onNoClick()">Schließen</button>
+    </div>
+    <div class="col-4">
+      <button mat-button class="btn" [disabled]="!questionForm.form.valid || context.published" (click)="save()">Speichern</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+.DS_Store
+Thumbs.db
+*.log
+*.dat
+*/dist/
+*/node_modules/
+*/backends/sensor-configuration.json
+*.dockerfile
+package-lock.json
+*.md
+*.prettierrc
+*.env
+*.pem
+/tools

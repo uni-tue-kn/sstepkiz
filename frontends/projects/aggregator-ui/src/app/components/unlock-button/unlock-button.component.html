@@ -1,0 +1,13 @@
+<div class="wrapper">
+  <mat-progress-spinner *ngIf="progress > 0"
+      class="progress" diameter="80" mode="determinate" strokeWidth="10"
+      [value]="progress">
+  </mat-progress-spinner>
+  <button mat-fab
+      aria-label="Entsperren" class="button" color="primary"
+      [matTooltip]="(unlockTime / 1000) + ' Sekunden gedrückt halten zum entsperren'"
+      (touchstart)="onDown()" (mouseleave)="onUp()" (touchend)="onUp()">
+    <mat-icon *ngIf="locked">lock</mat-icon>
+    <mat-icon *ngIf="!locked">lock_open</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,10 @@
+<div class="container text-center">
+  <h1 class="m-5">Body Functions Eda</h1>
+  <h3 class="m-2">Verbindung:</h3>
+    <div>
+        <button class="btn m-2" *ngIf="!isCallActive" [disabled]="!sender" (click)="call(sender.userId, sender.socketId, modes.Receiver)">Herstellen</button>
+        <button class="btn m-2" *ngIf="isCallActive" (click)="hangup()">Unterbrechen</button>
+        <br>
+        {{edaData}}
+    </div>
+</div>

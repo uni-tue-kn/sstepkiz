@@ -1,0 +1,163 @@
+<div class="container">
+  <h3 class="mt-2 text-center">{{ userGameSheet.avatarName }}</h3>
+
+  <div class="card">
+    <!--<Button (click)="safe()" class="btn m-3">Speichern</Button>-->
+    <div style="overflow: auto">
+      <app-avatar [items]="display.activeItems"></app-avatar>
+      <div class="d-flex align-items-center justify-content-end">
+        <p class="p-2" style="font-size: 14px; font-weight: bold">
+          {{ userGameSheet.coins }} Münzen
+        </p>
+        <!-- <img
+          class="pl-0"
+          src="../../../assets/shared/Murmeln.png"
+          style="transform: scale(0.6)"
+          alt="Murmeln"
+        /> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row mt-3 mb-3 ml-0 mr-0">
+      <div class="col-auto align-self-center p-0">
+        <button
+          class="clear-btn"
+          (click)="onItemChanged(false)"
+          [disabled]="scaledItemIndex < 1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#B5D932"
+            class="bi bi-caret-left-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="col text-center">
+        <h5 class="m-0">
+          {{
+            category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].name
+          }}
+        </h5>
+        <div class="d-flex align-items-center justify-content-center mt-2 mb-2">
+          <p class="pt-2" style="font-size: 14px; font-weight: bold">
+            {{
+              category.getAllItemsDocument(true, userGameSheet.highestMap)[
+                scaledItemIndex
+              ].cost
+            }}
+            Münzen
+          </p>
+          <!-- <img
+            class="pl-0"
+            src="../../../assets/shared/Murmeln.png"
+            style="transform: scale(0.6)"
+            alt="Murmeln"
+          /> -->
+        </div>
+        <button
+          *ngIf="
+            category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].purchased &&
+            !category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].active
+          "
+          class="btn"
+          (click)="
+            insert(
+              category.getAllItemsDocument(true, userGameSheet.highestMap)[
+                scaledItemIndex
+              ]
+            )
+          "
+        >
+          Anziehen
+        </button>
+        <button
+          *ngIf="
+            category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].purchased &&
+            category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].active
+          "
+          class="btn"
+          (click)="
+            remove(
+              category.getAllItemsDocument(true, userGameSheet.highestMap)[
+                scaledItemIndex
+              ]
+            )
+          "
+        >
+          Ausziehen
+        </button>
+        <button
+          *ngIf="
+            !category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].purchased
+          "
+          class="btn"
+          (click)="
+            buy(
+              category.getAllItemsDocument(true, userGameSheet.highestMap)[
+                scaledItemIndex
+              ],
+              itemIndex
+            )
+          "
+          [disabled]="
+            category.getAllItemsDocument(true, userGameSheet.highestMap)[
+              scaledItemIndex
+            ].cost > userGameSheet.coins
+          "
+        >
+          Kaufen
+        </button>
+      </div>
+      <div class="align-self-center col-auto p-0">
+        <button
+          class="clear-btn"
+          (click)="onItemChanged(true)"
+          [disabled]="
+            scaledItemIndex >
+            category.getAllItemsDocument(true, userGameSheet.highestMap)
+              .length -
+              2
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#B5D932"
+            class="bi bi-caret-right-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <app-game-wardrobe-menu
+    (categoryIndexEmitter)="selectCategory($event)"
+  ></app-game-wardrobe-menu>
+  <button routerLink="/progress" class="btn m-3">Zurück</button>
+</div>

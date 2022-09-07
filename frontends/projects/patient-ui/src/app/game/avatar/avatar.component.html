@@ -1,0 +1,25 @@
+<div >
+<svg id="pic-svg" viewBox="0 0 340 480" preserveAspectRatio="xMidYMid meet">
+
+  <image
+    y="-110"
+    x="-15"
+    height="734"
+    width="390"
+    id="figure"
+    [attr.href]="path + 'avatar.png'"
+  />
+  <g *ngIf="items.length !== 0">
+    <image
+    *ngFor="let item of items"
+    y="-110"
+    x="-15"
+    height="734"
+    width="390"
+    [id]="item.name"
+    [attr.href]="path + item.image"
+    ></image>
+  </g>
+  
+</svg>
+</div>

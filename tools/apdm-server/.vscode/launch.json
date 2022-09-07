@@ -1,0 +1,32 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch App (stream)",
+            "request": "launch",
+            "mainClass": "de.unituebingen.informatik.kn.App",
+            "projectName": "apdm-server",
+            "args": "-s 127.0.0.1:5000"
+        },
+        {
+            "type": "java",
+            "name": "Launch App (file config)",
+            "request": "launch",
+            "mainClass": "de.unituebingen.informatik.kn.App",
+            "projectName": "apdm-server",
+            "args": "-c ./example-apdm-config.json"
+        },
+        {
+            "type": "java",
+            "name": "Launch App (convert)",
+            "request": "launch",
+            "mainClass": "de.unituebingen.informatik.kn.App",
+            "projectName": "apdm-server",
+            "args": "-p \"C:\\Users\\JonasPrimbs\\sstepkiz\\apdm_raw\\10758\\XI-010758-0007_2021.06.14-13.36.11.apdm\" \"C:\\Users\\JonasPrimbs\\sstepkiz\\apdm_raw\\10739\\XI-010739-0008_2021.06.14-13.35.58.apdm\" \"C:\\Users\\JonasPrimbs\\sstepkiz\\apdm_raw\\10704\\XI-010704-0007_2021.06.14-13.36.25.apdm\" \"C:\\Users\\JonasPrimbs\\sstepkiz\\apdm\\apdm_mov_20210614133625000.h5\""
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+<div class="text-center">
+  <h2>Sensoren</h2>
+
+	<lib-sensor-page [user]="user"></lib-sensor-page>
+
+	<div *ngIf="!user">
+		<span>User ID missing</span>
+	</div>
+
+	<button class="btn m-4" [routerLink]="routerLinkBack">Zurück</button>
+</div>

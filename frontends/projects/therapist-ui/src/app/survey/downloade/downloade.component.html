@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Downloade</h1>
+<div mat-dialog-content>
+    <p>Welche Datei wollen Sie herrunterladen?</p>
+    <div class="row mt-2 ml-2">
+        <button class="btn mr-5" (click)="downloade('context')">Befragung</button>
+        <button class="btn" (click)="downloade('results')">Ergebnisse</button>
+    </div>
+</div>
+    <div mat-dialog-actions class="row justify-content-around mt-5">
+        <div >
+            <button mat-button class="btn" (click)="onNoClick()">Schließen</button>
+        </div>
+        <a style="display: none;" #downloadLink></a>
+
+    </div>

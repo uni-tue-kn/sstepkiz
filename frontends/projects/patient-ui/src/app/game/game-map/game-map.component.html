@@ -1,0 +1,229 @@
+<div class="container">
+  <h3 class="mt-2 text-center">{{ category.name }}</h3>
+
+  <div class="card pb-2">
+    <div class="background-img-scroll" [ngClass]="isDragging ? 'background-img-no-scroll' : null">
+      <svg
+        id="pic-svg"
+        viewBox="0 0 150 100"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <image
+          y="0"
+          x="0"
+          height="100"
+          width="150"
+          id="map"
+          [attr.href]="path + category.backgroundImage"
+        ></image>
+        <image
+          y="10"
+          x="-10"
+          height="110"
+          width="58"
+          id="figure"
+          [attr.href]="avatarPath + 'avatar.png'"
+        />
+        <g *ngIf="activeClothes.length >= 0">
+          <image
+            *ngFor="let item of activeClothes"
+            y="10"
+            x="-10"
+            height="110"
+            width="58"
+            [id]="item.name"
+            [attr.href]="avatarPath + item.image"
+          ></image>
+        </g>
+
+        <image
+          *ngFor="let item of display.activeItems"
+          class="item"
+          [hidden]="isNorthAmerica"
+          cdkDrag
+          (cdkDragStarted)="dragStart($event)"
+          (cdkDragEnded)="dragEnd($event, item)"
+          [cdkDragFreeDragPosition]="{ x: item.x, y: item.y }"
+          [attr.height]="item.h"
+          [attr.width]="item.w"
+          [attr.id]="item.name"
+          [attr.href]="path + item.image"
+        ></image>
+
+        <g transform="scale(0.5)" *ngIf="isNorthAmerica">
+          <svg
+                  *ngIf="isUnlocked(2)"
+                  [attr.x]="52"
+                  [attr.y]="86"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(2)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+          <svg
+                  *ngIf="!isUnlocked(2)"
+                  [attr.x]="52"
+                  [attr.y]="86"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  fill-opacity="0.8"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(2)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+
+          <svg
+                  *ngIf="isUnlocked(3)"
+                  [attr.x]="222"
+                  [attr.y]="70"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  class="bi bi-unlock-fill"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(3)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+          <svg
+                  *ngIf="!isUnlocked(3)"
+                  [attr.x]="222"
+                  [attr.y]="70"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  fill-opacity="0.8"
+                  class="bi bi-unlock-fill"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(3)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+
+          <svg
+                  *ngIf="isUnlocked(4)"
+                  [attr.x]="202"
+                  [attr.y]="140"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  class="bi bi-unlock-fill"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(4)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+          <svg
+                  *ngIf="!isUnlocked(4)"
+                  [attr.x]="202"
+                  [attr.y]="140"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  fill-opacity="0.8"
+                  class="bi bi-unlock-fill"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(4)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+
+          <svg
+                  *ngIf="isUnlocked(5)"
+                  [attr.x]="114"
+                  [attr.y]="90"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  class="bi bi-unlock-fill"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(5)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+          <svg
+                  *ngIf="!isUnlocked(5)"
+                  [attr.x]="114"
+                  [attr.y]="90"
+                  width="8"
+                  height="8"
+                  fill="#b5d932"
+                  fill-opacity="0.8"
+                  class="bi bi-unlock-fill"
+                  style="cursor: pointer"
+                  (click)="northAmericaPlaceClick(5)"
+          >
+            <circle cx="4" cy="4" r="4"/>
+          </svg>
+        </g>
+      </svg>
+    </div>
+    <div class="d-flex align-items-center justify-content-end">
+      <p class="pt-2 pr-2" style="font-size: 14px; font-weight: bold">
+        {{ userGameSheet.coins }} Münzen
+      </p>
+    </div>
+  </div>
+
+  <div class="card p-2">
+    <div style="overflow: auto">
+      <ul
+        class="list-group list-group-horizontal list-group-flush"
+        style="border: none"
+      >
+        <li
+          *ngFor="let item of category.getAllItemsDocument(false)"
+          class="list-group-item"
+          style="border: none"
+        >
+          <div class="card">
+            <div class="media m-3">
+              <img
+                class="mr-3"
+                style="margin: auto; max-height: 10em; max-width: 10em"
+                [src]="path + item.image"
+                [alt]="item.name"
+              />
+              <div class="media-body">
+                <h5 class="m-0">{{ item.name }}</h5>
+                <div class="media pl-0">
+                  <p class="pt-2" style="font-size: 14px; font-weight: bold">
+                    {{ item.cost }} Münzen
+                  </p>
+                </div>
+                <button
+                  *ngIf="!item.purchased"
+                  class="btn mt-3"
+                  [disabled]="item.cost > userGameSheet.coins"
+                  (click)="buy(item)"
+                >
+                  Kaufen
+                </button>
+                <button
+                  *ngIf="item.purchased && !item.active && !isNorthAmerica"
+                  class="btn mt-3"
+                  (click)="insert(item)"
+                >
+                  Einsetzen
+                </button>
+                <button
+                  *ngIf="item.purchased && item.active && !isNorthAmerica"
+                  class="btn mt-3"
+                  (click)="remove(item)"
+                >
+                  Ausblenden
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <button routerLink="/progress" class="btn m-3">Zurück</button>
+</div>

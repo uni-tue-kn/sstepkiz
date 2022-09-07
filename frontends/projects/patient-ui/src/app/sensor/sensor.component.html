@@ -1,0 +1,78 @@
+<div class="container text-center mb-0">
+  <h6 class="m-3">Bevor du dich verbinden kannst, ziehe deine Sensoren an und verbinde dich mit dem Tablet</h6>
+  <div class="card">
+    <h5 class="m-3">Zeit</h5>
+    <div class="row justify-content-center m-2">
+      <div *ngIf="!userInfo.startedExersice" class="col-3">
+        <button (click) ="sessionTimeStartEnd()" class="btn">Begin</button>
+      </div>
+      <div *ngIf="userInfo.startedExersice" class="col-3">
+        <button (click) ="sessionTimeStartEnd()" class="btn">Ende</button>
+      </div>
+
+      <div class="button-group">
+        <mat-button-toggle-group
+            *ngIf="userInfo.startedExersice"
+            aria-label="Toggle Gruppe welche den Zustand der Exposition labelt"
+            [(ngModel)]="exposition">
+          <mat-button-toggle
+              aria-label="Labelt den Expositionszustand als 'Vor Exposition'"
+              matTooltip="Vor Exposition"
+              value="vor expo">
+            Sensoren gestartet
+          </mat-button-toggle>
+          <!-- <mat-button-toggle
+              aria-label="Labelt den Expositionszustand als 'In Sensu Exposition'"
+              matTooltip="In Sensu Exposition"
+              value="in sensu expo">
+            Sensu
+          </mat-button-toggle> -->
+          <mat-button-toggle
+              aria-label="Labelt den Expositionszustand als 'In Vivo Exposition'"
+              matTooltip="In Vivo Exposition"
+              value="in vivo expo">
+            Start Expo
+          </mat-button-toggle>
+          <mat-button-toggle
+              aria-label="Labelt den Expositionszustand als 'Nach Exposition'"
+              matTooltip="Nach Exposition"
+              value="nach expo">
+            Übung beendet
+          </mat-button-toggle>
+          <span class="button-divider"></span>
+          <mat-button-toggle
+              aria-label="Labelt den Expositionszustand als 'Baseline'"
+              matTooltip="Keine Exposition"
+              value="baseline">
+            Baseline
+          </mat-button-toggle>
+          <!-- <mat-button-toggle
+            aria-label="Kennzeichnet eine Kognitive Intervention"
+            matTooltip="Kognitive Intervention"
+            value="kognitiv">
+          Kognitiv
+          </mat-button-toggle> -->
+          <mat-button-toggle
+              aria-label="Kennzeichnet das Auftreten eines Zwangs"
+              matTooltip="Zwang markieren"
+              value="zwang">
+            Zwang ausgeführt
+          </mat-button-toggle>
+          <mat-button-toggle
+              aria-label="Kennzeichnet eine Pause"
+              matTooltip="Pause kennzeichnen"
+              value="pause">
+            Pause
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div *ngIf="userInfo.startedExersice">
+     <p>
+       Angefangen: {{time | date:'HH:mm'}}
+     </p> 
+    </div>
+  </div>
+</div>
+
+<lib-rtc-user-ui></lib-rtc-user-ui>

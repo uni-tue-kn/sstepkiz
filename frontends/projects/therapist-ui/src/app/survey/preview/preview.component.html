@@ -1,0 +1,22 @@
+<div class='container'>
+  <app-title title="Vorschau" [text]="text" class="text-center"></app-title>
+<div class="frame mt-5">
+  <div style="overflow-y: scroll; height: 600px;">
+  <div class="top">
+    <button [routerLink]="routerLinkBack" class="close clear-btn">X</button>
+    <h3 class="p-5">
+      {{title}}
+    </h3>
+  </div>
+    <app-survey-frame  
+    [instruments]="instruments" 
+    [observations]="observations" 
+    [coins]="coins"
+    (resultEmitter)="exit($event)">
+  </app-survey-frame>
+</div>
+</div>
+<div class="mt-3">
+  <button [routerLink]="routerLinkBack" class=" btn col-2 mb-5">Zurück</button>
+</div>
+</div>

@@ -1,0 +1,53 @@
+<div class="container mt-5 align-content-between">
+  <div *ngIf="!isLoading" class="row align-items-center">
+    <div class="card w-100 m-3">
+      <div *ngIf="firstPage" class="container mt-5">
+        <h3 class="text-center mb-5">{{ conName }}</h3>
+        <h5 class="text-center">{{ conDesText }}</h5>
+        <div class="row m-5 justify-content-center">
+          <button (click)="firstPage = false" class="btn btn-patient">Weiter</button>
+        </div>
+      </div>
+
+      <div *ngIf="topic && !firstPage" class="container mt-5">
+        <h3 class="text-center mb-5">{{ insName }}</h3>
+        <h5 class="text-center">{{ insDesText }}</h5>
+        <div class="row m-5 justify-content-center">
+          <button (click)="topic = false" class="btn btn-patient">Weiter</button>
+        </div>
+      </div>
+      <div *ngIf="!topic && !stop">
+        <app-dynamic-form
+          class="w-100"
+          [observations]="observations"
+          [observationNumber]="observationNumber"
+          [instrument]="instrument"
+          [length]="length"
+          (stopEmitter)="stop = true"
+          (nextEmitter)="nextInstrument($event)"
+          (resultInstrument)="saveResult($event)"
+        >
+        </app-dynamic-form>
+      </div>
+
+      <div *ngIf="stop">
+        <div class="container mt-5">
+          <h3 class="text-center mb-5">Danke, dass du die Befragung gemacht hast</h3>
+          <h5 class="text-center mb-5">Du hast {{ coins }} Münzen dazu verdient!</h5>
+          <div class="row m-5 justify-content-center">
+            <button (click)="exit()" [disabled]="isSendingResult" class="btn btn-patient">
+              <span class="send"><mat-spinner *ngIf="isSendingResult" diameter="20"></mat-spinner>Absenden</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="row mt-5 w-100 justify-content-center align-items-center">
+    <div class="col-12 d-flex justify-content-center align-items-center">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+    <div class="col-12 d-flex justify-content-center align-items-center">
+      Befragung wird geladen
+    </div>
+  </div>
+</div>

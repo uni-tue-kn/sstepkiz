@@ -1,0 +1,63 @@
+<div>
+  <app-game-header></app-game-header>
+
+  <div class="row" style="position: absolute; right: 1em; top: 1em">
+    <img
+      class="logo"
+      alt="SSTeP-KiZ"
+      src="/assets/sstepkiz_logo.svg"
+      height="16"
+    />
+    <button
+      *ngIf="!authService.isAuthenticated"
+      class="btn"
+      style="background-color: transparent"
+      type="button"
+      (click)="authService.login()"
+    >
+      Login
+    </button>
+    <button
+      *ngIf="authService.isAuthenticated"
+      class="btn"
+      style="background-color: transparent"
+      type="button"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+    <div>
+      <button class="btn" style="background-color: transparent">?</button>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-item">
+      <a class="nav-link" routerLink="">Befragungen</a>
+    </div>
+    <div class="nav-item">
+      <a class="nav-link" routerLink="/progress/">Ich</a>
+    </div>
+    <div class="nav-item">
+      <a class="nav-link" routerLink="/feedback">Zustand</a>
+    </div>
+    <div class="nav-item">
+      <a class="nav-link" routerLink="/sensor">Sensor</a>
+    </div>
+  </div>
+
+  <!--<ul class="nav nav-tabs justify-content-around">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="">Aufgaben</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/feedback">Zustand</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/progress/">Ich</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/sensor">Sensor</a>
+    </li>
+  </ul>-->
+</div>

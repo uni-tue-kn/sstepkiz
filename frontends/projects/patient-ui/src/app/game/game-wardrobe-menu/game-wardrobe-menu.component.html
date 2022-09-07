@@ -1,0 +1,18 @@
+<div class="card category">
+  <div class="categoryContainer">
+    <button
+      *ngFor="let item of wardrobe"
+      class="clear-btn wardrobeCategory"
+      (click)="selectCategory(item.id)"
+    >
+      <svg width="35" viewBox="0 0 85 100">
+        <path
+          style="fill: #7b7b7b; fill-opacity: 1"
+          [attr.d]="item.path"
+          [id]="item.name"
+        />
+      </svg>
+      <p style="color: #7b7b7b">{{ item.name }}</p>
+    </button>
+  </div>
+</div>

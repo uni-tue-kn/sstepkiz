@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="card text-center p-2">
+    <h5>Deine Titel</h5>
+    
+    <table class="align-middle">
+      <tbody>
+        <tr *ngFor="let title of userGameSheet.titles">
+          <td style="font-size: 14px; font-weight: bold">{{ title }}</td>
+          <td style="text-align: right">
+            <button *ngIf="!isAvailableTitleMyCurrentTitle(title)" (click)="changeTitle(title)" class="btn">Anlegen</button>
+            <button *ngIf="isAvailableTitleMyCurrentTitle(title)" (click)="removeTitle(title)" class="btn">Ablegen</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card text-center p-2">
+    <h5>Neue Titel</h5>
+    <table class="align-middle ">
+      <tbody>
+        <tr *ngFor="let title of newTitles">
+          <td style="font-size: 14px; font-weight: bold">{{ title.title }}</td>
+          <td>
+            <p style="font-size: 14px; font-weight: bold">
+              {{ title.price }} Münzen
+            </p>
+          </td>
+          <td style="text-align: right">
+            <button
+              [disabled]="0 < title.price - userGameSheet.coins"
+              (click)="buyTitle(title.title, title.price)"
+              class="btn"
+            >
+              Einlösen
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button routerLink="/progress" class="btn m-3">Zurück</button>
+</div>

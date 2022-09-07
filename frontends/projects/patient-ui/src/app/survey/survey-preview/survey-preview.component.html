@@ -1,0 +1,21 @@
+<div class="card mat-elevation-z8 surveyPreview" (click)="start()">
+  <div class="surveyPreviewContainer">
+    <div class="col-6 meta">
+      <div>
+        <h5 class="m-0">{{ context.context.name }}</h5>
+        <p>{{ context.beginTimestamp | date: "dd.MM.yy" }}</p>
+        <p class="pt-2" *ngIf="context.mandatory">
+          {{ context.beginTimestamp | date: "HH:mm" }} -
+          {{ endTimestamp | date: "HH:mm" }} Uhr
+        </p>
+        <div class="pl-0 mb-2">
+          <p class="pt-3 coins">{{ coins }} Münzen</p>
+        </div>
+      </div>
+      <button (click)="start()" class="btn" [disabled]="disable">
+        Loslegen
+      </button>
+    </div>
+    <img class="col-6 p-0 m-0 surveyImg" [src]="src" alt="Object" />
+  </div>
+</div>

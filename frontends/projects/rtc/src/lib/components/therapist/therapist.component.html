@@ -1,0 +1,70 @@
+<div class="container text-center">
+    <app-title title="EyeTracking" text=""></app-title>
+    <p>Verbindung zu {{ partner.userId }}</p>
+    <button class="btn" *ngIf="!isCallActive">Herstellen</button>
+    <button class="btn" *ngIf="isCallActive">Unterbrechen</button>
+
+    <video #partnerVideo autoplay></video>
+   
+    
+</div>
+
+<div>
+    <video #partnerVideo autoplay></video>
+    <span>Partner ({{ partner.userId }})</span>
+  </div>
+ 
+  <br>
+  <div>
+    <span>Senders:</span>
+    <ul *ngIf="senders?.length > 0">
+      <li *ngFor="let s of senders">
+        <span>{{ s.userId }}, {{ s.socketId }}</span>
+        <button (click)="call(s.userId, s.socketId, modes.Receiver)">Call as receiver</button>
+      
+      </li>
+    </ul>
+  </div>
+  <br>
+  <div *ngIf="isRinging">
+    <span>Call from: {{ partner.userId }}, {{ partner.socketId }}</span>
+    <span>Session: {{ sessionId }}</span>
+    <br>
+    <button (click)="accept()">Accept</button>
+    <button (click)="decline()">Decline</button>
+  </div>
+  <div *ngIf="isCallActive">
+    <span>Call with: {{ partner.userId }}, {{ partner.socketId }}</span>
+    <span>Session: {{ sessionId }}</span>
+    <button (click)="hangup()">Hangup</button>
+  </div>
+  <div>
+    <h2>RX Channels</h2>
+    <ul *ngIf="rxChannels">
+      <li *ngFor="let c of rxChannels">
+        <span>{{ c.type.toString() }}:</span>
+        <button (click)="c.close()">Close</button>
+        <div *ngIf="c.type.toString() === 'mov'">
+          <span>{{ messages[c.type.toString()][messages[c.type.toString()].length - 1] | json }}</span>
+        </div>
+        <ng-template *ngIf="c.type.toString() !== 'mov'">
+          <p *ngFor="let m of messages[c.type.toString()]">{{ m | json }}</p>
+        </ng-template>
+      </li>
+    </ul>
+    <h2>TX Channels</h2>
+    <ul *ngIf="txChannels">
+      <li *ngFor="let c of txChannels">
+        <!-- <lib-rtc-channel [channel]="c"></lib-rtc-channel> -->
+      </li>
+    </ul>
+    <select [(ngModel)]="type">
+      <option value="ecg">ECG</option>
+      <option value="eda">EDA</option>
+      <option value="etk">EyeTracking</option>
+      <option value="mon">Monitoring</option>
+      <option value="mov">Movement</option>
+    </select>
+    <button (click)="open()">Open</button>
+  </div>
+  

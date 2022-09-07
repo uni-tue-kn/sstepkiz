@@ -1,0 +1,18 @@
+<div class="container text-center list">
+    <app-title title="Studien" text="Hier sind alle Studien auf die Sie zugreifen können"></app-title>
+    <div *ngFor="let element of listElements" class="shadow p-3 mb-4 bg-white rounded border border-secondary">
+        <div class="d-flex">
+            <div class="flex-grow-1 text-left m-auto">
+                <a routerLink="studie" (click)="setStudy(element)">
+                    <h5 class="m-auto">{{element.title}}</h5>
+                </a>
+            </div>
+            <a routerLink="studie/befragungen" (click)="setStudy(element)">
+                <img class="mr-3" src="../../assets/question.png" height="50" width="50" alt="Fragebogen">
+            </a>
+            <a routerLink="studie/patienten" (click)="setStudy(element)">
+                <img src="../../assets/group2.png" height="50" width="50" alt="Patienten">
+            </a>
+            </div>
+    </div>
+</div>

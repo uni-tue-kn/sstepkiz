@@ -1,0 +1,118 @@
+<div class="m-2 text-center">
+  <div *ngIf="!sender">
+    <h2>Der Patient sendet nicht</h2>
+  </div>
+
+  <button (click)="start()" [disabled]="play" class="btn m-2">Alle Sensoren starten</button>
+  <button class="btn m-2" [disabled]="!play" (click)="end()">Sensoren beenden</button>
+
+  <div *ngIf="play" #fullscreen class="fullscreen-panel">
+    <div>
+      <button class="btn m-2" (click)="toggleFullscreen()">{{ fullscreenButtonText }}</button>
+    </div>
+
+    <div *ngIf="user" id="sensor-container">
+      <lib-rtc-eyetracking id="eyetracker" class="m-2" [userId]="user.name">
+        <lib-rtc-body-functions-ecg id="ecg" class="m-2" [userId]="user.name">
+        </lib-rtc-body-functions-ecg>
+  
+        <div id="sensor-controls">
+          <div class="controls-group">
+            <span>Personen: </span>
+            <mat-button-toggle-group
+                aria-label="Toggle Gruppe, welche zu sehende Personengruppen labelt"
+                [(ngModel)]="persons">
+              <mat-button-toggle
+                  aria-label="Labelt aktuell zu sehende Personen als 'nur Patient'"
+                  matTooltip="Nur Patient zu sehen"
+                  value="patient">
+                Patient
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Labelt aktuell zu sehende Personen als 'Patient und andere'"
+                  matTooltip="Patient und andere zu sehen"
+                  value="patient and others">
+                Patient und Andere
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Labelt aktuell zu sehende Personen als 'Nur andere'"
+                  matTooltip="Nur andere zu sehen"
+                  value="others">
+                Andere
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="controls-group">
+            <span>Exposition:</span>
+            <mat-button-toggle-group
+                aria-label="Toggle Gruppe welche den Zustand der Exposition labelt"
+                [(ngModel)]="exposition">
+              <mat-button-toggle
+                  aria-label="Labelt den Expositionszustand als 'Vor Exposition'"
+                  matTooltip="Vor Exposition"
+                  value="vor expo">
+                Vorher
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Labelt den Expositionszustand als 'In Sensu Exposition'"
+                  matTooltip="In Sensu Exposition"
+                  value="in sensu expo">
+                Sensu
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Labelt den Expositionszustand als 'In Vivo Exposition'"
+                  matTooltip="In Vivo Exposition"
+                  value="in vivo expo">
+                Vivo
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Labelt den Expositionszustand als 'Nach Exposition'"
+                  matTooltip="Nach Exposition"
+                  value="nach expo">
+                Nachher
+              </mat-button-toggle>
+              <span class="button-divider"></span>
+              <mat-button-toggle
+                  aria-label="Labelt den Expositionszustand als 'Baseline'"
+                  matTooltip="Keine Exposition"
+                  value="baseline">
+                Baseline
+              </mat-button-toggle>
+              <mat-button-toggle
+                aria-label="Kennzeichnet eine Kognitive Intervention"
+                matTooltip="Kognitive Intervention"
+                value="kognitiv">
+              Kognitiv
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Kennzeichnet das Auftreten eines Zwangs"
+                  matTooltip="Zwang markieren"
+                  value="zwang">
+                Zwang
+              </mat-button-toggle>
+              <mat-button-toggle
+                  aria-label="Kennzeichnet eine Pause"
+                  matTooltip="Pause kennzeichnen"
+                  value="pause">
+                Pause
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <br>
+
+          <form (submit)="sendComment()">
+            <mat-form-field class="text" appearance="fill">
+              <mat-label>Freitext</mat-label>
+              <input #labelText matInput placeholder="Freitext hier einfügen">
+              <button matSuffix mat-icon-button type="submit">
+                <mat-icon>send</mat-icon>
+              </button>
+            </mat-form-field>
+          </form>
+        </div>
+      </lib-rtc-eyetracking>
+    </div>
+  </div>
+</div>

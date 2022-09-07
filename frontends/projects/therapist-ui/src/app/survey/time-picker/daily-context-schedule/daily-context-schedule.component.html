@@ -1,0 +1,77 @@
+<div class="container">
+    <form #timeSheetForm="ngForm" class="w-80 container justify-content-center align-items-start">
+        <div class="row p-3 border">
+            <div class="col-6 d-flex flex-column justify-content-center align-items-start">
+                <h4 class="">Datum - Zeitspanne</h4>
+                <mat-form-field appearance="fill">
+                    <mat-label>Zeitspanne</mat-label>
+                    <mat-date-range-input class="date-range" [rangePicker]="picker" [min]="minDate">
+                        <input matStartDate
+                               #startDateInput="ngModel"
+                               [(ngModel)]="dataSet.dateRange[0]"
+                               (dateChange)="onDataChange()"
+                               placeholder="Startdatum"
+                               name="startDate"
+                               required   />
+                        <input matEndDate
+                               #endDateInput="ngModel"
+                               [(ngModel)]="dataSet.dateRange[1]"
+                               (dateChange)="onDataChange()"
+                               placeholder="Enddatum"
+                               name="endDate"
+                               required/>
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+
+                    <mat-error *ngIf="!startDateInput.valid">Ungültiges Startdatum</mat-error>
+                    <mat-error *ngIf="!endDateInput.valid">Ungültiges Enddatum</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-6 d-flex justify-content-start align-items-center">
+                Wähle hier das Start- und Enddatum des Zeitplans aus.<br>
+                Es wird dann für jeden Tag automatisch eine Befragung geplant.
+            </div>
+        </div>
+
+        <div class="row border p-3 mt-4">
+            <div class="col-6 d-flex flex-column justify-content-center align-items-start">
+                <h4 class="">Uhrzeit</h4>
+                <div><input #mandatoryInput="ngModel"
+                            [(ngModel)]="dataSet.isMandatory"
+                            (change)="onDataChange()"
+                            name="mandatoryInput"
+                            class="mr-2 mb-2"
+                            type="checkbox"/>Zeitfenster verpflichtend</div>
+
+                <div>
+                    <mat-form-field class="example-full-width mr-2">
+                        <input matInput
+                               #startTime="ngModel"
+                               type="time"
+                               [(ngModel)]="dataSet.timePicks[0].start"
+                               (change)="onDataChange()"
+                               name="startTime"
+                               placeholder="Anfang"/>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="dataSet.isMandatory" class="example-full-width mr-2">
+                        <input matInput
+                               #endTime="ngModel"
+                               type="time"
+                               [(ngModel)]="dataSet.timePicks[0].end"
+                               (change)="onDataChange()"
+                               name="endTime"
+                               placeholder="Ende"/>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-6 d-flex justify-content-start align-items-center">
+                (Optional) Bestimme hier die tägliche Uhrzeit, ab welcher die Befragung für die Patienten freigeschalten wird.<br>
+                Wird keine Uhrzeit angegeben, ist die Befragung jeden Tag ab 00:00 Uhr für die Patienten verfügbar.
+                <br>
+                Hinweis: Du kannst das Zeitfenster als verpflichtend kennzeichnen.
+                Dann können die Patienten die Befragung ausschließlich innerhalb dieses Zeitfensters beantworten.<br>
+            </div>
+        </div>
+    </form>
+</div>

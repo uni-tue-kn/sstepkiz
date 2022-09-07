@@ -1,0 +1,81 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import 'variables.scss';
+/* Importing Bootstrap SCSS file. */
+//@import '~bootstrap/scss/bootstrap';
+
+
+.task {
+    background-color: rgb(255, 255, 255);
+}
+
+.box {
+    background-color: rgb(255, 255, 255);
+}
+
+
+.card {
+    margin-top: 10px;
+    border-radius: 20px;
+    
+}
+.justify-content-center{
+    justify-content: center;
+}
+
+.justify-content-space-evenly{
+    justify-content:space-evenly;
+}
+
+.center{
+    text-align: center;
+}
+
+.container {
+    margin-top: 5%;
+    margin-bottom: 15%;
+    
+}
+
+p {
+    margin: 0px;
+    font-size: 12px;
+}
+
+.btn{
+    background-color:#B5D932;
+    color:#FFF;
+    border-radius: 20px;
+}
+
+.ngb-tp-input{
+    margin: 50%;
+}
+
+.marble{
+    font-size: 12px; 
+    font-weight: bold;
+    color:#3EBDB2;
+}
+// .power{
+//     font-size: 12px; 
+//     font-weight: bold;
+//     color:#985a56;
+// }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; overscroll-behavior: contain; }
+
+.clear-btn{
+    background-color: transparent;
+    border: none;
+}
+.clear-btn:disabled{
+    opacity: .65;
+}
+.checkboxgroup {
+    display: inline-block;
+    text-align: center;
+  }
+  .checkboxgroup label {
+    display: block;
+  }

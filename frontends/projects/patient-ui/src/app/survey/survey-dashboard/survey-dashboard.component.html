@@ -1,0 +1,20 @@
+<div class="container mb-3">
+  <div class="justify-content-center row">
+    <div class="col-sm-12 col-md-6 mb-3">
+      <h3 class="mt-4 text-center">Aktuelle Befragungen</h3>
+      <div *ngIf="currentContextSchedules.length === 0">
+        <h5 class="m-3 disable text-center">Keine aktuellen Befragungen</h5>
+      </div>
+      <div *ngFor="let context of currentContextSchedules">
+        <app-context-preview [context]="context" [disable]="!disable"> </app-context-preview>
+      </div>
+      <h3 class="mt-5 text-center">Kommende Befragungen</h3>
+      <div *ngIf="upComingContextSchedules.length === 0">
+        <h5 class="m-3 disable text-center">Keine kommenden Befragungen.</h5>
+      </div>
+      <div *ngFor="let context of upComingContextSchedules">
+        <app-context-preview class="disable" [context]="context" [disable]="disable"> </app-context-preview>
+      </div>
+    </div>
+  </div>
+</div>

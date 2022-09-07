@@ -1,0 +1,185 @@
+version: '3.9'
+
+services:
+  db-test:            # Application database.
+    image: postgres:13-alpine                                                           # Minimal PostgreSQL image.
+    restart: always                                                                     # Always restart the service.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - POSTGRES_DB_FILE=/run/secrets/db_name                                           # Secret containing database name.
+      - POSTGRES_USER_FILE=/run/secrets/db_username                                     # Secret containing username.
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password                                 # Secret containing password.
+    secrets:
+      - db_name                                                                         # Database name secret of database.
+      - db_username                                                                     # Username secret of database.
+      - db_password                                                                     # Password secret of database.
+    volumes:
+      - db_data_test:/var/lib/postgresql/data                                                # Storage of database.
+  signalling-test:    # Signalling Server.
+    build:                                                                              # Use image of Signalling Server.
+      context: ../../
+      dockerfile: signalling.dockerfile
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - db-test                                                                              # For database access.
+      # - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - DB_HOST=db-test                                                                 # Hostname of database server.
+      - DB_NAME_FILE=/run/secrets/db_name                                               # Secret containing database name.
+      - DB_USER_FILE=/run/secrets/db_username                                           # Secret containing database username.
+      - DB_PASS_FILE=/run/secrets/db_password                                           # Secret containing database password.
+      - DB_PREFIX=signalling_                                                           # Database table prefix.
+      - LOG_LEVEL=5                                                                     # Log level 3 = errors, warnings and logs.
+      - OIDC_ISSUER=${SSO_ISSUER_TEST}                                                  # Endpoint of SSO.
+      - OIDC_PUBLIC_KEY_FILE=/home/app/sso_public_key.pem                               # Public Key of SSO.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.signalling-test.headers.customResponseHeaders.Cache-Control=no-cache" # Disable caching.
+      - "traefik.http.middlewares.signalling-test.headers.accessControlAllowHeaders=Accept, Authorization, Content-Type"  # Allowed XHR headers.
+      - "traefik.http.middlewares.signalling-test.headers.accessControlAllowMethods=DELETE, GET, OPTIONS, POST, PUT" # Allowed XHR methods.
+      - "traefik.http.middlewares.signalling-test.headers.accessControlAllowOriginList=https://${ADMIN_DOMAIN_TEST},http://localhost:4100,https://${PATIENT_DOMAIN_TEST},http://localhost:4200,https://${THERAPIST_DOMAIN_TEST},http://localhost:4300"  # Allowed XHR sources.
+      - "traefik.http.middlewares.signalling-test.headers.accessControlMaxAge=60"       # AC-header cache duration in seconds.
+      - "traefik.http.middlewares.signalling-test.headers.addVaryHeader=true"           # Prevent caching of Access-Control-Allow-Origin header for preflight.
+      - "traefik.http.middlewares.signalling-test.headers.contentSecurityPolicy=base-uri 'none';default-src 'none';form-action 'none';frame-ancestors 'none'"  # CSP Header.
+      - "traefik.http.middlewares.signalling-test.headers.sslHost=${SIGNALLING_DOMAIN_TEST}"  # Host to redirect for SSL.
+      - "traefik.http.routers.signalling-test.entrypoints=web,websecure"                # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.signalling-test.middlewares=secHeaders@file,gzip@file,signalling-test@docker"  # Enable middlewares.
+      - "traefik.http.routers.signalling-test.rule=Host(`${SIGNALLING_DOMAIN_TEST}`)"   # Host to listen for.
+      - "traefik.http.routers.signalling-test.tls.certresolver=letsencrypt"             # Use Let's Encrypt certificates.
+    secrets:
+      - db_name                                                                         # Database name secret of database.
+      - db_username                                                                     # Username secret of database.
+      - db_password                                                                     # Password secret of database.
+    volumes:
+      - ${PWD}/${SECRETS_DIR_TEST}/sso_public_key.pem:/home/app/sso_public_key.pem:ro        # Public Key of SSO.
+  gamification-test:  # Gamification Server.
+    build:                                                                              # Use image of Gamification Server.
+      context: ../../
+      dockerfile: gamification.dockerfile
+    restart: always                                                                     # Always restart the service.
+    depends_on:
+      - db-test                                                                              # For database access.
+      # - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    environment:
+      - DB_HOST=db-test                                                                 # Hostname of database server.
+      - DB_NAME_FILE=/run/secrets/db_name                                               # Secret containing database name.
+      - DB_USER_FILE=/run/secrets/db_username                                           # Secret containing database username.
+      - DB_PASS_FILE=/run/secrets/db_password                                           # Secret containing database password.
+      - DB_PREFIX=gamification_                                                         # Database table prefix.
+      - LOG_LEVEL=3                                                                     # Log level 3 = errors, warnings and logs.
+      - OIDC_ISSUER=${SSO_ISSUER_TEST}                                                  # Endpoint of SSO.
+      - OIDC_PUBLIC_KEY_FILE=/home/app/sso_public_key.pem                               # Public Key of SSO.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.gamification-test.headers.customResponseHeaders.Cache-Control=no-cache" # Disable caching.
+      - "traefik.http.middlewares.gamification-test.headers.accessControlAllowHeaders=Accept, Authorization, Content-Type"  # Allowed XHR headers.
+      - "traefik.http.middlewares.gamification-test.headers.accessControlAllowMethods=DELETE, GET, OPTIONS, POST, PUT" # Allowed XHR methods.
+      - "traefik.http.middlewares.gamification-test.headers.accessControlAllowOriginList=https://${ADMIN_DOMAIN_TEST},http://localhost:4100,https://${PATIENT_DOMAIN_TEST},http://localhost:4200"  # Allowed XHR sources.
+      - "traefik.http.middlewares.gamification-test.headers.accessControlMaxAge=60"     # AC-header cache duration in seconds.
+      - "traefik.http.middlewares.gamification-test.headers.addVaryHeader=true"         # Prevent caching of Access-Control-Allow-Origin header for preflight.
+      - "traefik.http.middlewares.gamification-test.headers.contentSecurityPolicy=base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'" # CSP Header.
+      - "traefik.http.middlewares.gamification-test.headers.sslHost=${GAMIFICATION_DOMAIN_TEST}"  # Host to redirect for SSL.
+      - "traefik.http.routers.gamification-test.entrypoints=web,websecure"              # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.gamification-test.middlewares=secHeaders@file,gzip@file,gamification-test@docker"  # Enable middlewares.
+      - "traefik.http.routers.gamification-test.rule=Host(`${GAMIFICATION_DOMAIN_TEST}`)" # Host to listen for.
+      - "traefik.http.routers.gamification-test.tls.certresolver=letsencrypt"           # Use Let's Encrypt certificates.
+    secrets:
+      - db_name                                                                         # Database name secret of database.
+      - db_username                                                                     # Username secret of database.
+      - db_password                                                                     # Password secret of database.
+    volumes:
+      - ${PWD}/${SECRETS_DIR_TEST}/sso_public_key.pem:/home/app/sso_public_key.pem:ro        # Public Key of SSO.
+  admin-test:         # SSteP-KiZ Administration's User Interface.
+    build:                                                                              # Use image of Admin UI server.
+      context: ../../
+      dockerfile: admin-ui.dockerfile
+      args:                                                                             # Build arguments to compile into the application.
+        GAMIFICATION_DOMAIN: ${GAMIFICATION_DOMAIN_TEST}                                  # Domain of Gamification Server.
+        SIGNALLING_DOMAIN: ${SIGNALLING_DOMAIN_TEST}                                      # Domain of Signalling Server.
+        SSO_ISSUER: ${SSO_ISSUER_TEST}                                                    # SSO endpoint.
+        SSO_BACKEND: ${SSO_BACKEND_TEST}                                                  # SSO backend.
+        CLIENT_ID: ${CLIENT_ID_ADMIN_TEST}                                                # OAuth Client ID.
+    restart: always                                                                     # Always restart the service.
+    # depends_on:
+      # - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.admin-test.headers.sslHost=${ADMIN_DOMAIN_TEST}"      # Host to redirect for SSL.
+      # - "traefik.http.middlewares.admin-test.headers.contentSecurityPolicy=base-uri 'self'; connect-src 'self' https://${SIGNALLING_DOMAIN_TEST} https://${SSO_DOMAIN_TEST}; default-src 'none'; form-action 'self'; frame-ancestors 'none'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.googleapis.com/" # CSP Header.
+      - "traefik.http.middlewares.admin2-test.ipwhitelist.sourcerange=${DMZ_RANGE}"     # Range of allowed source IP addresses.
+      - "traefik.http.routers.admin-test.entrypoints=web,websecure"                     # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.admin-test.middlewares=secHeaders@file,gzip@file,admin-test@docker,admin2-test@docker" # Enable middlewares.
+      - "traefik.http.routers.admin-test.rule=Host(`${ADMIN_DOMAIN_TEST}`)"             # Host to listen for.
+      - "traefik.http.routers.admin-test.tls.certresolver=letsencrypt"                  # Use Let's Encrypt certificates.
+  patient-test:       # Patient's User Interface.
+    build:                                                                              # Use image of Patient UI server.
+      context: ../../
+      dockerfile: patient-ui.dockerfile
+      args:                                                                             # Build arguments to compile into the application.
+        GAMIFICATION_DOMAIN: ${GAMIFICATION_DOMAIN_TEST}                                # Domain of Gamification Server.
+        IMERA_DOMAIN: ${IMERA_DOMAIN_TEST}                                              # Domain of IMeRa Server.
+        SIGNALLING_DOMAIN: ${SIGNALLING_DOMAIN_TEST}                                    # Domain of Signalling Server.
+        SSO_ISSUER: ${SSO_ISSUER_TEST}                                                  # SSO endpoint.
+        CLIENT_ID: ${CLIENT_ID_PATIENT_TEST}                                            # OAuth Client ID.
+        TURN_DOMAIN: ${TURN_DOMAIN}:${TURNS_PORT}                                       # Domain of TURN Server.
+        STUN_DOMAIN: ${TURN_DOMAIN}:${TURN_PORT}                                        # Domain of STUN Server.
+    restart: always                                                                     # Always restart the service.
+    # depends_on:
+      # - proxy                                                                           # For online availability.
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.patient-test.headers.sslHost=${PATIENT_DOMAIN_TEST}"  # Host to redirect for SSL.#
+      - "traefik.http.middlewares.patient-test.headers.contentSecurityPolicy=base-uri 'self'; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://${GAMIFICATION_DOMAIN_TEST} https://${IMERA_DOMAIN_TEST} wss://${SIGNALLING_DOMAIN_TEST} https://${SSO_DOMAIN_TEST}; default-src 'none'; font-src https://fonts.gstatic.com; form-action 'self'; frame-ancestors 'none'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com" # CSP Header.
+      - "traefik.http.routers.patient-test.entrypoints=web,websecure"                   # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.patient-test.middlewares=secHeaders@file,gzip@file,patient-test@docker" # Enable middlewares.
+      - "traefik.http.routers.patient-test.rule=Host(`${PATIENT_DOMAIN_TEST}`)"         # Host to listen for.
+      - "traefik.http.routers.patient-test.tls.certresolver=letsencrypt"                # Use Let's Encrypt certificates.
+  therapist-test:     # Therapist's User Interface
+    build:                                                                              # Use image of Therapist UI server.
+      context: ../../
+      dockerfile: therapist-ui.dockerfile
+      args:                                                                             # Build arguments to compile into the application.
+        IMERA_DOMAIN: ${IMERA_DOMAIN_TEST}                                              # Domain of IMeRa Server.
+        SIGNALLING_DOMAIN: ${SIGNALLING_DOMAIN_TEST}                                    # Domain of Signalling Server.
+        SSO_ISSUER: ${SSO_ISSUER_TEST}                                                  # SSO endpoint.
+        CLIENT_ID: ${CLIENT_ID_THERAPIST_TEST}                                          # OAuth Client ID.
+        TURN_DOMAIN: ${TURN_DOMAIN}:${TURNS_PORT}                                       # Domain of TURN Server.
+        STUN_DOMAIN: ${TURN_DOMAIN}:${TURN_PORT}                                        # Domain of STUN Server.
+    restart: always                                                                     # Always restart the service.
+    # depends_on:
+      # - proxy
+    logging:
+      driver: json-file                                                                 # Log stdout to JSON files.
+    labels:
+      - "traefik.enable=true"                                                           # Enable proxy access.
+      - "traefik.http.middlewares.therapist-test.headers.sslHost=${THERAPIST_DOMAIN_TEST}"  # Host to redirect for SSL.
+      - "traefik.http.middlewares.therapist-test.headers.contentSecurityPolicy=base-uri 'self'; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://${IMERA_DOMAIN_TEST} wss://${SIGNALLING_DOMAIN_TEST} https://${SSO_DOMAIN_TEST}; default-src 'none'; font-src https://fonts.gstatic.com; form-action 'self'; frame-ancestors 'none'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com" # CSP Header.
+      - "traefik.http.routers.therapist-test.entrypoints=web,websecure"                 # Make available on HTTP and HTTPS.
+      - "traefik.http.routers.therapist-test.middlewares=secHeaders@file,gzip@file,therapist-test@docker" # Enable middlewares.
+      - "traefik.http.routers.therapist-test.rule=Host(`${THERAPIST_DOMAIN_TEST}`)"     # Host to listen for.
+      - "traefik.http.routers.therapist-test.tls.certresolver=letsencrypt"              # Use Let's Encrypt certificates.
+
+secrets:
+  db_name:            # Secret of database name.
+    file: ${SECRETS_DIR_TEST}/db_name.txt
+  db_username:        # Secret of database username.
+    file: ${SECRETS_DIR_TEST}/db_username.txt
+  db_password:        # Secret of database password.
+    file: ${SECRETS_DIR_TEST}/db_password.txt
+
+volumes:
+  db_data_test:       # Persistent data of volumes.
+
+networks:
+  default:
+    external: true
+    name: sstepkiz-server_default

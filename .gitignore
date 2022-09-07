@@ -1,0 +1,8 @@
+.angular
+.DS_Store
+Thumbs.db
+.log
+*.dat
+*.angular/
+*/dist/
+*/node_modules/

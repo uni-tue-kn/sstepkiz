@@ -1,0 +1,9 @@
+<div class="container text-center list">
+  <app-title title="Neue Befragung anlegen"></app-title>
+  <div>
+    <p>Sie können neue Instrument anlegen oder eine ganze Befragung importieren</p>
+    <button class="btn col-4 m-2" [routerLink]="routerLinkContinue">neue Instrumente</button>
+    <button class="btn col-4 m-2" (click)="openDialog()">Befragung importieren</button>
+  </div>
+  <button [routerLink]="routerLinkBack" class="m-3 btn col-2">Zurück</button>
+</div>

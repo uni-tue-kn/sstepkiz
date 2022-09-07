@@ -1,0 +1,63 @@
+<div class="mx-auto">
+  <div class="mb-5 mr-5 ml-5">
+    <h3 class="text-center mb-5" [attr.for]="observation.id">{{ observation.text }}</h3>
+
+    <div [ngSwitch]="observation.dataType" class="options">
+      <div class="row justify-content-center" *ngSwitchCase="'String'">
+        <textarea [(ngModel)]="observation.value" [id]="observation.id" cols="25" rows="10" class="textarea" [required]="!observation.optional"></textarea>
+      </div>
+
+      <div class="row justify-content-center">
+        <ngb-timepicker [(ngModel)]="observation.value" *ngSwitchCase="'Date'"></ngb-timepicker>
+      </div>
+
+      <div *ngSwitchCase="'Option'">
+        <div class="singleChoiceOptionsContainer">
+          <div class="singleChoiceOption" *ngFor="let opt of observation.options">
+            <input [(ngModel)]="observation.value" [id]="opt.id" type="radio" [value]="opt.id" />
+            <label [for]="opt.id">{{ opt.textValue }}</label>
+          </div>
+        </div>
+      </div>
+
+      <!--<div *ngSwitchCase="'Option'" [class]="observation.class">
+        <div>
+          <div class="singleChoiceOption" *ngFor="let opt of observation.options">
+            <input [class]="observation.inputClass" [(ngModel)]="observation.value" [id]="opt.id" type="radio" [value]="opt.id" />
+            <label [for]="opt.id">{{ opt.textValue }}</label>
+          </div>
+        </div>
+      </div>-->
+      <div *ngSwitchCase="'Checkbox'">
+        <div>
+          <div *ngFor="let opt of observation.options">
+            <input
+              [id]="opt.id"
+              type="checkbox"
+              [checked]="checkboxsChecked.get(opt.id)"
+              (change)="checkboxsChecked.set(opt.id, !checkboxsChecked.get(opt.id))"
+              [value]="opt.id"
+              class="m-2"
+            />{{ opt.textValue }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'Double'" class="scalaContainer">
+        <div>
+          <p class="m-3">{{ sliderMin }}</p>
+          <mat-slider
+            thumbLabel
+            [displayWith]="formatSliderThumbLabel"
+            [min]="observation.lowerBound"
+            [max]="observation.upperBound"
+            [value]="0"
+            step="1"
+            [(ngModel)]="observation.value"
+          ></mat-slider>
+          <p class="m-3">{{ sliderMax }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

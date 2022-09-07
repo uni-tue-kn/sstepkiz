@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="card text-center">
+        <h5 class="m-3">Sensoren</h5>
+        <h6 class="m-3">Bevor du dich verbiendest kannst, ziehe deine Sensoren an und verbinde dich mit dem Tablet</h6>
+        <div *ngIf="senders?.length > 0">
+            <div *ngFor="let s of senders">
+                <button class="btn m-3 col-4" (click)="call(s.userId, s.socketId, modes.Monitor)">Verbinden</button>
+            </div>
+            <div *ngIf="isCallActive">
+                <p>Du bist verbunden</p>
+            </div>
+        </div>
+        <div *ngFor="let sensor of sensors">
+            <div class="row m-3">
+                <svg height="1em" width="1em" *ngIf="sensor.activ; else notactiv">
+                    <circle cx="8" cy="8" r="8" stroke="black" stroke-width="1" fill="#B5D932" />
+                </svg>
+                <ng-template #notactiv>
+                    <svg height="1em" width="1em">
+                        <circle cx="8" cy="8" r="8" stroke="black" stroke-width="1" fill="white" />
+                    </svg>
+                </ng-template>
+                <h6 class="pl-3">{{sensor.name}}</h6>
+            </div>
+        </div>
+    </div>
+</div>

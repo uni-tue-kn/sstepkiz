@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="row" id="progress-box">
+    <div class="col-12">
+      <app-statistic></app-statistic>
+      <div class="card mat-elevation-z1">
+        <h5 class="m-3">Name ändern</h5>
+        <div class="row mt-1 mr-3 ml-3 mb-3 justify-content-between">
+          <input
+            type="text"
+            maxlength="15"
+            [(ngModel)]="userGameSheet.avatarName"
+            name="avatarName"
+            class="col-6 form-control"
+            placeholder="Name"
+          />
+          <button
+            class="btn text-center col-5"
+            [disabled]="sendingRequest"
+            (click)="edit()"
+          >
+            Speichern
+          </button>
+        </div>
+      </div>
+      <!--TODO BKU Title Feature disabled for 1. Release!
+                Plan is to extend Title Feature afterwards. User shall earn titels by doing surveys 
+                
+            <app-preview-card title="Titel" text="Wähle einen Titel aus" button="Titel wählen" link="/title"
+                image="../../assets/shared/trophy.svg"></app-preview-card>
+            -->
+      <app-preview-card
+        title="Avatar"
+        text="Passe deinen Avatar an"
+        button="Avatar anpassen"
+        link="/avatar"
+        image="../../assets/game/wardrobe/menue.png"
+      ></app-preview-card>
+      <div class="card mat-elevation-z1">
+        <div class="media-body m-3">
+          <h5 class="m-0">Sammelbuch</h5>
+          <p class="m-0">
+            Klicke auf ein grünes Schloss und schaue dir deine Sammlung an
+          </p>
+        </div>
+        <app-game-overview class="mb-3"></app-game-overview>
+      </div>
+    </div>
+  </div>
+</div>

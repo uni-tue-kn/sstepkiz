@@ -1,0 +1,50 @@
+#sensor-container{
+  display: flex;
+  flex-direction: column;
+}
+
+#eyetracker {
+  display: block;
+  width: 100%;
+}
+
+#ecg {
+  bottom: 0;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#sensor-controls {
+  display: block;
+  background-color: rgba(255,255,255,0.8);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.fullscreen-panel:fullscreen {
+  overflow-y: auto;
+}
+
+.controls-group {
+  display: inline-block;
+  margin: 0 1em;
+}
+
+.text {
+  width: 100%;
+}
+
+.button-divider {
+  border-style: solid;
+  border-color: #e0e0e0;
+  border-left-width: thin;
+  border-right-width: thin;
+  width: 10px;
+  border-top: 0;
+  border-bottom: 0;
+  margin: 0;
+}

@@ -1,0 +1,13 @@
+<header>
+  <mat-toolbar class="mat-elevation-z2" color="primary" role="toolbar">
+    <mat-toolbar-row role="banner">
+      <span role="heading"><img class="logo" alt="SSTeP-KiZ" src="/assets/sstepkiz_logo.svg" height="16">{{ title }}</span>
+
+      <span class="spacer"></span>
+
+      <button *ngIf="!isAuthenticated" mat-button matTooltip="Login via IMeRa SSO" (click)="login()">Login</button>
+      <button *ngIf="isAuthenticated" mat-button [matTooltip]="'Authenticated as ' + username"
+        (click)="logout()">Logout</button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</header>

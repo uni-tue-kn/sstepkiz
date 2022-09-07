@@ -1,0 +1,20 @@
+.category  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .categoryContainer  {
+    max-width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: scroll;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  
+    .wardrobeCategory {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+  }
+}

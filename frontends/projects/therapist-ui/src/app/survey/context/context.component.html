@@ -1,0 +1,55 @@
+<div class="container list">
+  <app-title [title]="title" [text]="text"></app-title>
+  <form action="" class="mt-5 text-left">
+    <label for="name">Name der Befragung [ID {{ context.id }}]</label>
+    <input [(ngModel)]="context.name" type="text" name="name" class="form-control" [disabled]="context.published" />
+    <label class="mt-3" for="descriptionText">Beschreibungstext</label>
+    <textarea
+      [(ngModel)]="context.descriptionText"
+      name="descriptionText"
+      rows="7"
+      [disabled]="context.published"
+      placeholder="Beschreibungstext"
+      class="form-control mt-2"
+    ></textarea>
+  </form>
+
+  <h4 class="grap p-0 mt-3 mb-2">Instrumente</h4>
+  <ul class="grap list-group shadow mt-4 bg-white rounded border border-secondary list mx-auto">
+    <li class="list-group-item" *ngFor="let element of instruments; index as i">
+      <div class="d-flex">
+        <div class="flex-grow-1 text-left m-auto">
+          <form *ngIf="element.name == null; else name" #questionForm="ngForm" class="mr-5" name="titleinput">
+            <input ngModel type="text" name="name" class="form-control" placeholder="Title Instrument" />
+          </form>
+          <ng-template #name>
+            <a [routerLink]="routerLink" (click)="edit(element)">
+              <h4 class="m-auto">{{ element.name }}</h4>
+            </a>
+          </ng-template>
+        </div>
+        <div *ngIf="!context.published">
+          <button class="clear-btn">
+            <img class="mr-3" src="../../assets/time.svg" [routerLink]="routerLink" (click)="edit(element)" height="20" width="20" alt="Bearbeiten" />
+          </button>
+          <button class="clear-btn" (click)="openDialogDelete(element.id, i)">X</button>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item text-center" (click)="createNewElement(); edit(newElement)" [routerLink]="routerLink">
+      <button class="clear-btn" [disabled]="context.published">+</button>
+    </li>
+  </ul>
+  <div class="mt-5 mb-5">
+    <button class="col btn mt-3" [disabled]="length < 1" (click)="openPreview()">Vorschau der Befragung</button>
+    <button class="col btn mt-3" (click)="navigateToTimePicker()">Zeitplan erstellen</button>
+    <button class="col btn mt-3" [routerLink]="routerLinkSchedule">Zeitplan einsehen</button>
+    <button class="col btn mt-3" (click)="openDialogImport()" [disabled]="context.published">Befragung importieren</button>
+    <div class="mt-4">
+      <button class="btn col-3" (click)="save()" [disabled]="context.published">Speichern und Zurück</button>
+    </div>
+    <div class="mt-3">
+      <button [routerLink]="routerLinkBack" class="btn col-2 mb-5">Zurück</button>
+    </div>
+  </div>
+</div>

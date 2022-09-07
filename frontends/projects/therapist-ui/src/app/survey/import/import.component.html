@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Import von Befragungen</h1>
+<div mat-dialog-content>
+  <p>Bitte wählen Sie die Fragen und Antwortmöglichkeiten der zu importierenden Befragung aus. Die Dateien müssen entsprechend der Layout Datei organisiert sein.</p>
+  <p>Hier können Sie die Layout Datei sowie ein Beispiel herrunterlanden</p>
+  <button class="btn mt-3 mr-3" (click)="download('layout')">Layout Datei</button>
+  <button class="btn mt-3" (click)="download('example')">Beispiel</button>
+
+  <h2 class="mt-5">Fragebogen</h2>
+  <form [formGroup]="form">
+    <!-- <div *ngIf="!update">
+            <label for="name">Name der Befragung</label>
+            <br>
+            <input placeholder="Name" formControlName="name" name="name">
+        </div> -->
+    <div *ngIf="update">
+      <p style="color: red">Wichtig! Wenn Sie einen Fragebogen importieren werden alle Daten überschrieben</p>
+    </div>
+    <div>
+      <input class="mt-2" type="file" name="context" (change)="uploadFile($event, 'fileOne')" />
+    </div>
+    <div>
+      <input class="mt-2" name="observations" type="file" (change)="uploadFile($event, 'fileTwo')" />
+    </div>
+  </form>
+  <div class="text-center">
+    <p class="unsuccessful" style="color: red" *ngIf="errorMessage">Das hat nicht funktioniert. {{ errorMessage }}</p>
+    <!-- <p class="successful" style="color: green;" *ngIf="successful">Erfolgreich Importiert</p> -->
+  </div>
+
+  <div mat-dialog-actions class="row justify-content-around mt-5">
+    <div class="col-4">
+      <button mat-button class="btn" (click)="close()">Schließen</button>
+    </div>
+    <div class="col-4">
+      <button mat-button class="btn" cdkFocusInitial (click)="submitForm()">Importieren</button>
+    </div>
+  </div>
+  <a style="display: none" #downloadLink></a>
+</div>

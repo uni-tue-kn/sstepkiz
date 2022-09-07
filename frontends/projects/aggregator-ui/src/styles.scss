@@ -1,0 +1,30 @@
+@import '~material-design-icons-iconfont/dist/material-design-icons.css';
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html, body, app-root { 
+  height: 100vh;
+  min-height: 100vh;
+  display: block;
+}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.fill {
+  width: 100%;
+}
+
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.select {
+  -webkit-touch-callout: auto;
+  -webkit-user-select: auto;
+  -khtml-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}

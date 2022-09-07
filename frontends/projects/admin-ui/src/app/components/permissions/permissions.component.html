@@ -1,0 +1,72 @@
+<h2 class="title" role="heading">Permissions</h2>
+<p>The following users are permitted to read checked data from selected user.</p>
+
+<mat-form-field class="filter" appearance="fill">
+  <mat-label>Filter</mat-label>
+
+  <mat-icon matPrefix>filter_alt</mat-icon>
+  <input #filterInput autocomplete="username" autofocus cdkFocusInitial matInput role="search" type="search"
+    (keyup)="applyPermissionFilter($event)">
+
+  <button mat-icon-button matSuffix matTooltip="Clear" tabindex="-1" type="button" (click)="clearFilter()">
+    <mat-icon>clear</mat-icon>
+  </button>
+</mat-form-field>
+
+<table mat-table matSort [dataSource]="dataSource">
+  <ng-container matColumnDef="name">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header>Username</th>
+    <td *matCellDef="let targetUser" mat-cell> {{ targetUser.username }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="group">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header>Group</th>
+    <td *matCellDef="let user" mat-cell>{{ user.group }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="ecg">
+    <th *matHeaderCellDef mat-header-cell>ECG</th>
+    <td *matCellDef="let targetUser" mat-cell>
+      <mat-checkbox [checked]="user.permissions?.[targetUser.username]?.ecg ?? false"
+        (change)="togglePermission({ targetId: targetUser.username, ecg: true })">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="eda">
+    <th *matHeaderCellDef mat-header-cell>EDA</th>
+    <td *matCellDef="let targetUser" mat-cell>
+      <mat-checkbox role="checkbox" [checked]="user.permissions?.[targetUser.username]?.eda ?? false"
+        (change)="togglePermission({ targetId: targetUser.username, eda: true })">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="etk">
+    <th *matHeaderCellDef mat-header-cell>Eye Tracking</th>
+    <td *matCellDef="let targetUser" mat-cell>
+      <mat-checkbox role="checkbox" [checked]="user.permissions?.[targetUser.username]?.etk ?? false"
+        (change)="togglePermission({ targetId: targetUser.username, etk: true })">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="mov">
+    <th *matHeaderCellDef mat-header-cell>Movement</th>
+    <td *matCellDef="let targetUser" mat-cell>
+      <mat-checkbox role="checkbox" [checked]="user.permissions?.[targetUser.username]?.mov ?? false"
+        (change)="togglePermission({ targetId: targetUser.username, mov: true })">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <tr *matNoDataRow class="mat-row">
+    <td class="mat-cell empty-cell" [attr.colspan]="displayedPermissionColumns.length">
+      <span *ngIf="dataSource.filter">No matching users found for filter "{{ filterInput.value }}"</span>
+      <span *ngIf="!dataSource.filter">No users found</span>
+    </td>
+  </tr>
+
+  <tr *matHeaderRowDef="displayedPermissionColumns" mat-header-row></tr>
+  <tr *matRowDef="let targetUser; columns: displayedPermissionColumns;" mat-row></tr>
+</table>

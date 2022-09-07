@@ -1,0 +1,107 @@
+.action-button {
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-color: #000000;
+    padding: 12px;
+    margin-left: 12px;
+    transition-duration: 0.27s;
+}
+
+.action-button:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.user-table {
+    width: 100%;
+
+    .mat-column-select {
+        width: 10%;
+    }
+
+    .mat-column-id {
+        width: 6%;
+    }
+
+    .mat-column-name {
+        width: 84%;
+    }
+
+    .mat-row:hover .mat-cell {
+        background-color: #c4c4c4;
+        cursor: pointer;
+    }
+}
+
+
+.action-left {
+    color: #000000;
+    background-color: #ffffff;
+    padding: 12px;
+}
+.action-left:hover {
+    cursor: pointer;
+}
+
+.action-right {
+    color: #000000;
+    background-color: #ffffff;
+    padding: 12px;
+}
+.action-right:hover {
+    cursor: pointer;
+}
+
+.content-height {
+    /*height: 73vh;
+    min-height: 73vh;*/
+    height: 600px;
+    min-height: 600px;
+}
+
+.date-pick-margin {
+    margin-top: 85px;
+}
+
+
+.day {
+    height: 30px;
+    width: 30px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+
+.in {
+    color: rgb(7, 7, 7);
+    background-color: transparent;
+    border: none;
+}
+
+.out {
+    color: rgb(180, 179, 179);
+    background-color: transparent;
+    border: none;
+}
+
+.errorContainer {
+    max-height: 100px;
+    overflow-y: scroll;
+
+    .error {
+        color: red;
+    }
+}
+
+
+.flex   {
+    display: flex;
+    align-items: center;
+
+    mat-spinner {
+        margin-right: 6px;
+    }
+}

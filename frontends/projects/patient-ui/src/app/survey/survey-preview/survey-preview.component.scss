@@ -1,0 +1,55 @@
+@use '@angular/material' as mat;
+.disable{
+  opacity: 0.5;
+
+}
+
+.surveyPreview  {
+  @include mat.elevation-transition();
+  @include mat.elevation(1);
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  &:hover {
+    cursor: pointer;
+    @include mat.elevation(3);
+  }
+
+  &:active {
+    @include mat.elevation(7);
+  }
+}
+
+
+.surveyPreviewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //height: 180px;
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    //height: 100%;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    button {
+      justify-self: flex-end;
+      margin-top: 10px;
+    }
+  }
+
+  .surveyImg {
+    object-fit: contain;
+    width: 100%;
+    height : 150px;
+  }
+}

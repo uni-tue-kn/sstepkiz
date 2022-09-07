@@ -1,0 +1,118 @@
+<h2 mat-dialog-title role="heading">Create User</h2>
+
+<form role="form" [formGroup]="userForm" (ngSubmit)="submit()">
+  <mat-dialog-content role="main">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Username</mat-label>
+
+      <mat-icon matPrefix>person</mat-icon>
+      <input autocomplete="username" autofocus cdkFocusInitial formControlName="username" matInput required type="text"
+        [pattern]="usernamePattern" [maxlength]="usernameMaxLength" [minlength]="usernameMinLength">
+
+      <button aria-label="Clear username" mat-icon-button matSuffix matTooltip="Clear" tabindex="-1" type="button"
+        (click)="clearUsername()">
+        <mat-icon>clear</mat-icon>
+      </button>
+
+      <mat-hint *ngIf="(userForm.controls.username.value?.length || 0) < usernameMinLength">Min {{ usernameMinLength }}
+        characters</mat-hint>
+      <mat-hint *ngIf="(userForm.controls.username.value?.length || 0) < usernameMinLength" align="end">{{
+        userForm.controls.username.value?.length || 0 }}/{{ usernameMinLength }}</mat-hint>
+
+      <mat-hint *ngIf="(userForm.controls.username.value?.length || 0) >= usernameMinLength">Max {{ usernameMaxLength }}
+        characters</mat-hint>
+      <mat-hint *ngIf="(userForm.controls.username.value?.length || 0) >= usernameMinLength" align="end">{{
+        userForm.controls.username.value?.length || 0 }}/{{ usernameMaxLength }}</mat-hint>
+
+      <mat-error *ngIf="userForm.controls.username.hasError('minlength')">Username must have <strong>at least {{
+          usernameMinLength }} characters</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.username.hasError('maxlength')">Username must have <strong>at most {{
+          usernameMaxLength }} characters</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.username.hasError('pattern')">Username allows <strong>only lower case letters
+          or digits</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.username.hasError('required')">Username is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <br>
+    <br>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Password</mat-label>
+
+      <mat-icon matPrefix>password</mat-icon>
+      <input autocomplete="new-password" formControlName="password" matInput required [maxlength]="passwordMaxLength"
+        [minlength]="passwordMinLength" [type]="hidePassword ? 'password' : 'text'">
+
+      <button *ngIf="hidePassword" aria-label="Show password" mat-icon-button matSuffix matTooltip="Show" tabindex="-1"
+        type="button" (click)="toggleHidePassword()">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button *ngIf="!hidePassword" aria-label="Hide password" mat-icon-button matSuffix matTooltip="Hide" tabindex="-1"
+        type="button" (click)="toggleHidePassword()">
+        <mat-icon>visibility_off</mat-icon>
+      </button>
+
+      <button aria-label="Copy password" mat-icon-button matSuffix matTooltip="Copy" tabindex="-1" type="button"
+        [disabled]="!userForm.controls.password.valid" (click)="copyPassword()">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+
+      <button mat-icon-button matSuffix matTooltip="Generate" tabindex="-1" type="button" (click)="generatePassword()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <mat-hint *ngIf="(userForm.controls.password.value?.length || 0) < passwordMinLength">Min {{ passwordMinLength }}
+        characters</mat-hint>
+      <mat-hint *ngIf="(userForm.controls.password.value?.length || 0) < passwordMinLength" align="end">{{
+        userForm.controls.password.value?.length || 0 }}/{{ passwordMinLength }}</mat-hint>
+
+      <mat-hint *ngIf="(userForm.controls.password.value?.length || 0) >= passwordMinLength">Max {{ passwordMaxLength }}
+        characters</mat-hint>
+      <mat-hint *ngIf="(userForm.controls.password.value?.length || 0) >= passwordMinLength" align="end">{{
+        userForm.controls.password.value?.length || 0 }}/{{ passwordMaxLength }}</mat-hint>
+
+      <mat-error *ngIf="userForm.controls.password.hasError('minlength')">Password must have <strong>at least {{
+          passwordMinLength }} characters</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('maxlength')">Password must have <strong>at most {{
+          passwordMaxLength }} characters</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('lowercase')">Password must have <strong>at least one lower
+          case letter</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('uppercase')">Password must have <strong>at least one upper
+          case letter</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('digit')">Password must have <strong>at least one
+          digit</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('special')">Password must have <strong>at least one special
+          char of {{ passwordSpecialChars }}</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('pattern')">Password must contain <strong>only lower and
+          upper case letters, digits, or one of {{ passwordSpecialChars }}</strong></mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('required')">Password is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <br>
+    <br>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Group</mat-label>
+
+      <mat-icon matPrefix>group</mat-icon>
+      <mat-select formControlName="group" required>
+        <mat-option value="admin">Administrator</mat-option>
+        <mat-option value="therapist">Therapist</mat-option>
+        <mat-option value="patient">Patient</mat-option>
+      </mat-select>
+
+      <mat-error *ngIf="userForm.controls.password.hasError('required')">One group is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="userForm.controls.password.hasError('pattern')">Group must be one of <strong>Administrator,
+          Patient, or Therapist</strong></mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button aria-label="Cancel" mat-button mat-dialog-close type="reset">Cancel</button>
+    <button aria-label="Create" color="accent" mat-button type="submit" [disabled]="!userForm.valid"
+      (click)="submit()">Create</button>
+  </mat-dialog-actions>
+</form>

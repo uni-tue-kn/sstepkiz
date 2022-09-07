@@ -1,0 +1,40 @@
+{
+  "/aggregator-api": {
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/aggregator-api": ""
+    },
+    "secure": false,
+    "target": "http://localhost:3000"
+  },
+  "/game-api-prod": {
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/game-api-prod": ""
+    },
+    "secure": false,
+    "changeOrigin": true,
+    "target": {
+      "host": "game.example.org",
+      "protocol": "https:",
+      "port": 443
+    }
+  },
+  "/game-api": {
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/game-api": ""
+    },
+    "secure": false,
+    "target": "http://localhost:3200"
+  },
+  "/signalling-api": {
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/signalling-api": ""
+    },
+    "secure": false,
+    "target": "http://localhost:3300",
+    "ws": true
+  }
+}

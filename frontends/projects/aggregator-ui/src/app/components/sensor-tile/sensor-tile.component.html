@@ -1,0 +1,93 @@
+<div class="grid-item" cdkDrag cdkDragBoundary=".grid-container" [cdkDragStartDelay]="200">
+  <mat-card class="grid-item-content">
+    <mat-card-header>
+      <mat-card-title>{{ title }}</mat-card-title>
+
+      <mat-card-subtitle>{{ sensor?.driver || 'Nicht verbunden' }}</mat-card-subtitle>
+
+      <span class="fill"></span>
+
+      <div class="shift-right">
+        <ng-container *ngIf="sensor?.batteryState !== undefined">
+          <mat-icon *ngIf="sensor?.batteryState > 0.2" aria-label="Icon das den Batteriezustand anzeigt" [matTooltip]="'Batteriezustand ' + (sensor?.batteryState * 100).toFixed(0).toString() + '%'">battery_full</mat-icon>
+          <mat-icon *ngIf="sensor?.batteryState <= 0.2" aria-label="Icon das den Batteriezustand anzeigt" [matTooltip]="'Batteriezustand ' + (sensor?.batteryState * 100).toFixed(0).toString() + '%'" color="warn">battery_alert</mat-icon>
+        </ng-container>
+
+        <ng-container *ngIf="sensor?.capabilities?.recordable">
+          <mat-icon *ngIf="sensor?.recordingState === 'running'" aria-label="Icon das den Aufnahmezustand anzeigt" aria-current="Aufnahme läuft" matTooltip="Aufnahme läuft" [style.color]="'#d32f2f'">fiber_manual_record</mat-icon>
+          <mat-icon *ngIf="sensor?.recordingState === 'stopped'" aria-label="Icon das den Aufnahmezustand anzeigt" aria-current="Aufnahme gestoppt" matTooltip="Aufnahme gestoppt" [style.color]="'#bdbdbd'">fiber_manual_record</mat-icon>
+          <mat-icon *ngIf="sensor?.recordingState === 'starting'" aria-label="Icon das den Aufnahmezustand anzeigt" aria-current="Aufnahme wird gestartet" matTooltip="Aufnahme wird gestartet" [style.color]="'#ffee58'">fiber_manual_record</mat-icon>
+          <mat-icon *ngIf="sensor?.recordingState === 'stopping'" aria-label="Icon das den Aufnahmezustand anzeigt" aria-current="Aufnahme wird gestoppt" matTooltip="Aufnahme wird gestoppt" [style.color]="'#ffee58'">fiber_manual_record</mat-icon>
+          <mat-icon *ngIf="sensor?.recordingState === 'failed'" aria-label="Icon das den Aufnahmezustand anzeigt" aria-current="Fehler bei der Aufnahme" matTooltip="Fehler bei der Aufnahme" color="#43a047">error</mat-icon>
+        </ng-container>
+
+        <ng-container *ngIf="sensor?.capabilities?.streamable">
+          <mat-icon *ngIf="sensor?.streamingState === 'running'" aria-label="Icon das den Streamingzustand anzeigt" aria-current="Übertragung läuft" matTooltip="Übertragung läuft" [style.color]="'#43a047'">sensors</mat-icon>
+          <mat-icon *ngIf="sensor?.streamingState === 'stopped'" aria-label="Icon das den Streamingzustand anzeigt" aria-current="Übertragung gestoppt" matTooltip="Übertragung gestoppt" [style.color]="'#bdbdbd'">sensors_off</mat-icon>
+          <mat-icon *ngIf="sensor?.streamingState === 'starting'" aria-label="Icon das den Streamingzustand anzeigt" aria-current="Übertragung wird gestartet" matTooltip="Übertragung wird gestartet" [style.color]="'#ffee58'">sensors</mat-icon>
+          <mat-icon *ngIf="sensor?.streamingState === 'stopping'" aria-label="Icon das den Streamingzustand anzeigt" aria-current="Übertragung wird gestoppt" matTooltip="Übertragung wird gestoppt" [style.color]="'#ffee58'">sensors_off</mat-icon>
+          <mat-icon *ngIf="sensor?.streamingState === 'failed'" aria-label="Icon das den Streamingzustand anzeigt" aria-current="Fehler bei der Übertragung" matTooltip="Fehler bei der Übertragung" color="warn">error</mat-icon>
+        </ng-container>
+
+        <ng-container *ngIf="sensor?.capabilities?.calibratable">
+          <mat-icon *ngIf="sensor?.calibratingState === 'running'" aria-label="Icon das den Kalibrierungszustand anzeigt" aria-current="Kalibrierung läuft" matTooltip="Kalibrierung läuft" [style.color]="'#bdbdbd'">compass_calibration</mat-icon>
+          <ng-container *ngIf="sensor?.calibratingState === 'stopped'">
+            <mat-icon *ngIf="sensor?.calibrationState" aria-label="Icon das den Kalibrierungszustand anzeigt" aria-current="Kalibrierung gestoppt" matTooltip="Kalibriert" [style.color]="'#43a047'">compass_calibration</mat-icon>
+            <mat-icon *ngIf="!sensor?.calibrationState" aria-label="Icon das den Kalibrierungszustand anzeigt" aria-current="Kalibrierung gestoppt" matTooltip="Nicht kalibriert" color="warn">compass_calibration</mat-icon>
+          </ng-container>
+          <mat-icon *ngIf="sensor?.calibratingState === 'starting'" aria-label="Icon das den Kalibrierungszustand anzeigt" aria-current="Kalibrierung wird gestartet" matTooltip="Kalibrierung wird gestartet" [style.color]="'#ffee58'">compass_calibration</mat-icon>
+          <mat-icon *ngIf="sensor?.calibratingState === 'stopping'" aria-label="Icon das den Kalibrierungszustand anzeigt" aria-current="Kalibrierung wird gestoppt" matTooltip="Kalibrierung wird gestoppt" [style.color]="'#ffee58'">compass_calibration</mat-icon>
+          <mat-icon *ngIf="sensor?.calibratingState === 'failed'" aria-label="Icon das den Kalibrierungszustand anzeigt" aria-current="Fehler bei der Kalibrierung" matTooltip="Fehler bei der Kalibrierung" color="warn">error</mat-icon>
+        </ng-container>
+
+        <ng-container *ngIf="sensor?.capabilities?.connectable">
+          <mat-icon *ngIf="sensor?.connectionState === 'running'" aria-label="Icon das den Verbindungszustand anzeigt" aria-current="Verbunden" matTooltip="Verbunden" [style.color]="'#43a047'">link</mat-icon>
+          <mat-icon *ngIf="sensor?.connectionState === 'stopped'" aria-label="Icon das den Verbindungszustand anzeigt" aria-current="Getrennt" matTooltip="Getrennt" [style.color]="'#bdbdbd'">link_off</mat-icon>
+          <mat-icon *ngIf="sensor?.connectionState === 'starting'" aria-label="Icon das den Verbindungszustand anzeigt" aria-current="Verbindung wird hergestellt" matTooltip="Verbindung wird hergestellt" [style.color]="'#ffee58'">link</mat-icon>
+          <mat-icon *ngIf="sensor?.connectionState === 'stopping'" aria-label="Icon das den Verbindungszustand anzeigt" aria-current="Verbindung wird getrennt" matTooltip="Verbindung wird getrennt" [style.color]="'#ffee58'">link_off</mat-icon>
+          <mat-icon *ngIf="sensor?.connectionState === 'failed'" aria-label="Icon das den Verbindungszustand anzeigt" aria-current="Verbindungsfehler" matTooltip="Verbindungsfehler" color="warn">error</mat-icon>
+        </ng-container>
+
+        <button *ngIf="sensor" mat-icon-button (click)="reset()" aria-label="Button der den Sensor Treiber zurücksetzt" aria-current="Zurücksetzen" matTooltip="Zurücksetzen">
+          <mat-icon [class.spinner]="sensor?.initializationState === 'starting' || sensor?.initializationState === 'stopping'">refresh</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-progress-bar *ngIf="!sensor?.capabilities" mode="indeterminate"></mat-progress-bar>
+
+    <mat-card-content>
+      <span *ngIf="!sensor?.capabilities">Verbindung wird hergestellt...</span>
+      
+      <ng-template customSensorComponent></ng-template>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button *ngIf="sensor?.capabilities?.configurable" mat-button [class.spinner]="sensor?.configurationState === 'starting'" [disabled]="sensor?.configurationState === 'starting' || false" (click)="sensor?.configure()">Konfigurieren</button>
+
+      <ng-container *ngIf="sensor?.capabilities?.connectable">
+        <button *ngIf="sensor?.connectionState === 'running'" mat-button (click)="sensor?.disconnect()">Trennen</button>
+        <button *ngIf="sensor?.connectionState === 'stopping'" mat-button disabled>Trennen</button>
+        <button *ngIf="sensor?.connectionState === 'stopped'" mat-button (click)="sensor?.connect()">Verbinden</button>
+        <button *ngIf="sensor?.connectionState === 'starting'" mat-button disabled>Verbinden</button>
+        <button *ngIf="sensor?.connectionState === 'failed'" mat-button (click)="sensor?.connect()">Erneut Verbinden</button>
+      </ng-container>
+
+      <ng-container *ngIf="sensor?.capabilities?.calibratable">
+        <button *ngIf="sensor?.calibratingState === 'running'" mat-button (click)="sensor?.stopCalibrating()">Kalibrierung stoppen</button>
+        <button *ngIf="sensor?.calibratingState === 'stopping'" mat-button disabled>Kalibrierung stoppen</button>
+        <button *ngIf="sensor?.calibratingState === 'stopped'" mat-button [disabled]="sensor?.capabilities.connectable && sensor?.connectionState !== 'running'" (click)="startCalibrating()">Kalibrierung starten</button>
+        <button *ngIf="sensor?.calibratingState === 'starting'" mat-button disabled>Kalibrierung starten</button>
+        <button *ngIf="sensor?.calibratingState === 'failed'" mat-button [disabled]="sensor?.capabilities.connectable && sensor?.connectionState !== 'running'" (click)="startCalibrating()">Erneut Kalibrieren</button>
+      </ng-container>
+
+      <ng-container *ngIf="sensor?.capabilities?.recordable">
+        <button *ngIf="sensor?.recordingState === 'running'" mat-button (click)="sensor?.stopRecording()">Aufnahme stoppen</button>
+        <button *ngIf="sensor?.recordingState === 'stopping'" mat-button disabled>Aufnahme stoppen</button>
+        <button *ngIf="sensor?.recordingState === 'stopped'" mat-button [disabled]="sensor?.capabilities.connectable && sensor?.connectionState !== 'running'" (click)="startRecording()">Aufnahme starten</button>
+        <button *ngIf="sensor?.recordingState === 'starting'" mat-button disabled>Aufnahme starten</button>
+        <button *ngIf="sensor?.recordingState === 'failed'" mat-button [disabled]="sensor?.capabilities.connectable && sensor?.connectionState !== 'running'" (click)="startRecording()">Aufnahme erneut starten</button>
+      </ng-container>
+    </mat-card-actions>
+  </mat-card>
+</div>

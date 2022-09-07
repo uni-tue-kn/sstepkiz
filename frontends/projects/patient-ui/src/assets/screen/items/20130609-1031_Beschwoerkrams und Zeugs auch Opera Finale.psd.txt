@@ -1,0 +1,15 @@
+
+three layers need to be renamed because they contain question marks (before export)
+
+multiple layers need to be renamed because they contain umlauts or ß (before or after export)
+
+the following images had their z position swapped to correct order:
+ * Stirnband_113_92_128_54_189.png
+ * Tauber Adler_29_36_90_80_193.png
+
+the following images were corrected to remove artifacts:
+ * "Grosser Murks_193_237_35_31_87.png"
+ * "Luckigucki!_118_372_23_15_70.png"
+ * "Yeah!_77_222_149_158_37" (now Yeah!_77_307_149_73_37.png)
+
+images in "large" directory were not automatically processed and have additional corrections

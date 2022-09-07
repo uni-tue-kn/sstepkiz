@@ -1,0 +1,27 @@
+<h1>Aggregator Administration</h1>
+
+<ul>
+  <li *ngFor="let config of configurations | keyvalue">
+    <lib-aggregator-config
+        [configuration]="config.value"
+        (configChange)="updateConfiguration(config.key, $event)"
+        (delete)="removeConfiguration(config.key)">
+      <span>{{ config.key }}</span>
+    </lib-aggregator-config>
+    <br>
+  </li>
+</ul>
+
+<div>
+  <h2>Create User</h2>
+
+  <lib-aggregator-config
+      [configuration]="newConfiguration.configuration"
+      (configChange)="createConfiguration($event)">
+    <label>
+      <span>target user:</span>
+      <input type="text" [(ngModel)]="newConfiguration.targetUser">
+    </label>
+    <br>
+  </lib-aggregator-config>
+</div>

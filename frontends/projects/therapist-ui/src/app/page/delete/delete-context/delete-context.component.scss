@@ -1,0 +1,13 @@
+.deleteRequest   {
+  display: flex;
+  flex-direction: row;
+  align-items: center !important;
+  justify-content: flex-start;
+
+  p {
+    text-align: center;
+    padding: 0px;
+    margin-bottom: 0px;
+    margin-left: 10px;
+  }
+}

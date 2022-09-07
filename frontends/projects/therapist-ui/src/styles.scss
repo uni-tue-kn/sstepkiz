@@ -1,0 +1,120 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "variables.scss";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+body {
+    [hidden] {
+        display: none!important;
+    }
+}
+
+.btn {
+    background-color: white;
+    border-radius: 20px;
+    border-color: #6c757d;
+}
+
+.primary-action-button {
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-color: #000000;
+    padding: 12px;
+    margin-left: 12px;
+    transition-duration: 0.27s;
+}
+
+.primary-action-button:hover:enabled {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.primary-action-button:disabled {
+    border-color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.ngb-tp .btn {
+    background-color: #b5d932;
+    color: #fff;
+    border-radius: 20px;
+    border-color: #b5d932;
+    margin: 5px;
+}
+
+.clear-btn {
+    background-color: transparent;
+    color: black;
+    border: none;
+}
+
+.list {
+    max-width: 800px;
+}
+
+.sidenav {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+a {
+    color: black;
+}
+
+.grab {
+    cursor: grab;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.card {
+    margin-top: 10px;
+    border-radius: 20px;
+}
+
+.container {
+    margin-top: 1%;
+    margin-bottom: 1%;
+    overflow-y: auto;
+    /*margin-top: 5%;
+    margin-bottom: 15%;*/
+}
+
+p {
+    margin: 0px;
+    font-size: 12px;
+}
+
+.btn-patient {
+    background-color: #b5d932;
+    color: #fff;
+    border-radius: 20px;
+    border-color: #b5d932;
+}
+
+.checkboxgroup {
+    display: inline-block;
+    text-align: center;
+}
+.checkboxgroup label {
+    display: block;
+}
+

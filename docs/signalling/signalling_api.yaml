@@ -1,0 +1,241 @@
+openapi: 3.0.1
+info:
+  title: SSteP-KiZ Signalling Server
+  description: A Signalling Server for RTC connections of the SSteP-KiZ project.
+  contact:
+    email: jonas.primbs@uni-tuebingen.de
+  version: 0.1.0
+servers:
+- url: https://signalling.example.org/
+paths:
+  /:
+    get:
+      summary: Hello message
+      description: Gets a hello message.
+      responses:
+        200:
+          description: OK
+  /permissions:
+    get:
+      summary: Finds all permissions
+      description: Gets existing permissions from the database.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PermissionDescription'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+    post:
+      summary: Creates new permissions
+      description: Creates new permissions, stores it in the database and returns
+        the created value
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionDescription'
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDescription'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+    put:
+      summary: Updates existing permissions
+      description: Updates a permission if it exists.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionDescription'
+        required: false
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+  /permissions/{subjectId}/{targetId}:
+    delete:
+      summary: Removes existing permissions
+      description: Deletes existing permissions from the database.
+      parameters:
+      - name: subjectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: targetId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+  /users:
+    get:
+      summary: Finds all users
+      description: Gets all users from database.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDescription'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+    post:
+      summary: Creates a new user
+      description: Creates a new user from description.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDescription'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDescription'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+  /users/{userId}:
+    delete:
+      summary: Removes existing user.
+      description: Deletes an existing user by its username.
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        example: patient1
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+      security:
+      - sstepkiz_auth:
+        - signalling-admin
+components:
+  schemas:
+    UnauthorizedResponse:
+      required:
+      - message
+      - statusCode
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 401.0
+        message:
+          type: string
+          example: Unauthorized
+    UserDescription:
+      required:
+      - userId
+      type: object
+      properties:
+        userId:
+          type: string
+          description: Identity of user.
+          example: patient1
+    PermissionDescription:
+      required:
+      - subjectId
+      - targetId
+      type: object
+      properties:
+        ecg:
+          type: boolean
+          description: If the target is allowed to access ECG data.
+        eda:
+          type: boolean
+          description: If the target is allowed to access EDA data.
+        eyetracking:
+          type: boolean
+          description: If the target is allowed to access eyetracking data.
+        movement:
+          type: boolean
+          description: If the target is allowed to access movement data.
+        subjectId:
+          type: string
+          description: Identity of the user that allows the permissions.
+          example: patient1
+        targetId:
+          type: string
+          description: Identity of user that is permitted by these permissions.
+          example: therapist1
+  securitySchemes:
+    sstepkiz_auth:
+      type: oauth2
+      flows:
+        implicit:
+          # authorizationUrl: https://sso.example.org/auth/realms/sstep-kiz/protocol/openid-connect/auth
+          authorizationUrl: 'http://localhost:8180/auth/realms/sstepkiz'
+          scopes:
+            signalling_admin: Administration of Signalling Server
+            signalling_receive: Registration as Receiver
+            signalling_monitor: Registration as Monitor
+            signalling_send: Registration as Sender

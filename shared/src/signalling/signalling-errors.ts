@@ -1,0 +1,10 @@
+export const SIGNALLING_ERROR_AUTHENTICATION = 'Authentication failed';
+export const SIGNALLING_ERROR_CALL_DECLINED = 'Call declined';
+export const SIGNALLING_ERROR_CALL_REQUEST_TIMEOUT = 'Call request timeout';
+export const SIGNALLING_ERROR_CONNECTION_TIMEOUT = 'Connection timeout';
+export const SIGNALLING_ERROR_INTERNAL = 'Internal server error';
+export const SIGNALLING_ERROR_REGISTRATION_TIMEOUT = 'Registration timeout';
+export const SIGNALLING_ERROR_RING_TIMEOUT = 'Ring timeout';
+export const SIGNALLING_ERROR_UNAVALIABLE = 'Target unavailable';
+export const SIGNALLING_ERROR_UNSUPPORTED_AUTH_TYPE = 'Unsupported authentication type';
+export const SIGNALLING_ERROR_INVALID_MODE = 'Invalid mode';

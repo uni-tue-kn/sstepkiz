@@ -1,0 +1,44 @@
+:host {
+  align-items: center;
+  background: rgba(0,0,0,.8);
+  bottom: 0;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.info {
+  padding: 2em;
+}
+
+.unlock {
+  position: fixed;
+}
+.unlock-1 {
+  right: 2em;
+  top: 2em;
+}
+.unlock-2 {
+  bottom: 2em;
+  left: 2em;
+}
+
+.arrow {
+  position: fixed;
+  width: 5em;
+}
+.arrow > path {
+  fill: #fff;
+}
+.arrow-ld {
+  bottom: 6em;
+  left: 6em;
+}
+.arrow-ru {
+  right: 6em;
+  top: 6em;
+}

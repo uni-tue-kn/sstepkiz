@@ -1,0 +1,3 @@
+
+following changes are needed after exporting:
+ * all "#" in file names to "-"

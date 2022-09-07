@@ -1,0 +1,63 @@
+<div class="container text-center">
+  <app-title title="Zeitpläne" [text]="text"></app-title>
+  <button [routerLink]="routerLinkBack" class="mt-2 mb-3 btn col-2">Zurück</button>
+  <button *ngIf="selection.selected.length > 0" mat-fab class="md-fab md-fab-bottom-right" color="primary" aria-label="deleteButton" (click)="delete()">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <table mat-table [dataSource]="dataSource" class="table-striped shadow bg-white rounded border border-secondary list mx-auto">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox
+          (change)="$event ? selectAllToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()"
+        >
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="patient">
+      <th mat-header-cell *matHeaderCellDef>Patient</th>
+      <td mat-cell *matCellDef="let element">{{ element.user.id }}</td>
+    </ng-container>
+    <ng-container matColumnDef="start">
+      <th mat-header-cell *matHeaderCellDef>Beginn</th>
+      <td mat-cell *matCellDef="let element">{{ element.beginTimestamp | date: "d/M/yy HH:mm" }}</td>
+    </ng-container>
+    <ng-container matColumnDef="end">
+      <th mat-header-cell *matHeaderCellDef>Ende</th>
+      <td mat-cell *matCellDef="let element">{{ element.endTime | date: "d/M/yy HH:mm" }}</td>
+    </ng-container>
+    <ng-container matColumnDef="mandatory">
+      <th mat-header-cell *matHeaderCellDef>Verpflichtend</th>
+      <td mat-cell *matCellDef="let element">{{ element.mandatory ? "Ja" : "Nein" }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="selection.toggle(row)"></tr>
+    <!--<thead>
+      <tr>
+        <th scope="col">Patient</th>
+        <th scope="col">Begin</th>
+        <th scope="col">Ende</th>
+        <th scope="col">Verpflichtend</th>
+        <th scope="col">Löschen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of schedules">
+        <th scope="row">{{ item.user.id }}</th>
+        <td>{{ item.beginTimestamp | date: "d/M/yy HH:mm" }}</td>
+        <td>{{ item.endTime | date: "d/M/yy HH:mm" }}</td>
+        <td *ngIf="item.mandatory">Ja</td>
+        <td *ngIf="!item.mandatory">Nein</td>
+        <td><button class="clear-btn" (click)="delete(item.id)">X</button></td>
+      </tr>
+    </tbody>-->
+  </table>
+</div>

@@ -1,0 +1,8 @@
+<div class="row">
+        <div class="col shadow p-3 m-4 bg-white rounded border border-secondary" *ngFor="let element of navElements">
+                <a [routerLink]="element.link">
+                        <img class="p-3" height="200" width="200" [src]="element. image" [alt]="element.title">
+                        <h3 class="p-3">{{element.title}}</h3>
+                </a>
+        </div>
+</div>

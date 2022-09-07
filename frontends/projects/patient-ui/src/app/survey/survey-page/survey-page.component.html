@@ -1,0 +1,7 @@
+<div class="top">
+  <button [routerLink]="routerLinkBack" class="close clear-btn">X</button>
+  <h3 class="p-5">
+    {{ title }}
+  </h3>
+</div>
+<app-survey-frame [isLoading]="isLoading" [instruments]="instruments" [observations]="observations" [coins]="coins" [isSendingResult]="isSendingResults" (resultEmitter)="send($event)"> </app-survey-frame>

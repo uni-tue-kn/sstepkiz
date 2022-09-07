@@ -1,0 +1,10 @@
+<span *ngIf="!browserSupported">Browser not supported! Please use Google Chrome or Microsoft Edge!</span>
+<ng-container *ngIf="browserSupported">
+  <header>
+    <app-header></app-header>
+  </header>
+
+  <main>
+      <router-outlet></router-outlet>
+  </main>
+</ng-container>

@@ -1,0 +1,209 @@
+<div class="container text-center">
+  <app-title title="Ergebnisse" [text]="text"></app-title>
+
+  <p>
+    Bitte wählen Sie den Zeitraum aus in dem Sie die Ergebnisse Sehen möchten.
+  </p>
+  <div class="m-5">
+    <mat-form-field appearance="fill">
+      <mat-label>Datum eingeben</mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input matEndDate formControlName="end" placeholder="End date" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')"
+        >Bitte überprüfen Sie das Anfangs Datum
+      </mat-error>
+      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')"
+        >Bitte überprüfen Sie das End Datum</mat-error
+      >
+    </mat-form-field>
+
+    <button
+      class="btn ml-4"
+      [disabled]="range.controls.start === null || range.controls.end === null"
+      (click)="show()"
+    >
+      Ergebnisse zeigen
+    </button>
+  </div>
+
+  <div *ngIf="timeRageEmpty">
+    <p>Der ausgewählte Bereich ist leer.</p>
+    <p>
+      Das letzte Mal wurde dieser Fragebogen am
+      {{ lastResult.created | date: "d/M/yy" }} beantwortet
+    </p>
+  </div>
+
+  <div *ngIf="showResults">
+    <div *ngFor="let instrument of instruments; let i = index">
+      <div class="mat-elevation-z3">
+        <h3 class="m-3">{{ instrument.name }}</h3>
+
+        <div>
+          <app-chart
+            *ngIf="
+              instrument.dataSets.labels !== null &&
+              instrument.dataSets.labels !== undefined &&
+              instrument.dataSets.labels.length > 0
+            "
+            [charData]="{
+              name: instrument.name,
+              data: instrument.dataSets.avgs
+            }"
+            [labels]="instrument.dataSets.labels"
+          ></app-chart>
+          <div
+            *ngIf="
+              instrument.likertQuestions !== null &&
+              instrument.likertQuestions !== undefined &&
+              instrument.likertQuestions.length > 0
+            "
+            class="tableContainer"
+          >
+            <h3 class="mt-5">Fehlende Antworten der Likert Skala</h3>
+            <table
+              class="table table-striped bg-white rounded border border-secondary list mx-auto"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th scope="col">Nicht beantwortete Fragen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let result of instrument.instrumentResults">
+                  <th scope="row">
+                    {{ result.created | date: "d/M/yy HH:mm" }}
+                  </th>
+                  <td *ngFor="let item of result.missingResults">
+                    {{ item }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            instrument.choiceQuestions !== null &&
+            instrument.choiceQuestions !== undefined &&
+            instrument.choiceQuestions.length > 0
+          "
+        >
+          <div class="tableContainer">
+            <h3 class="mt-5">Choice Antworten</h3>
+            <table
+              class="table table-striped bg-white rounded border border-secondary list mx-auto"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th
+                    scope="col"
+                    *ngFor="let question of instrument.choiceQuestions"
+                  >
+                    {{ question.text }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let result of instrument.instrumentResults">
+                  <th scope="row">
+                    {{ result.created | date: "d/M/yy HH:mm" }}
+                  </th>
+                  <td *ngFor="let item of result.optionResults">
+                    {{ item.option.textValue }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            instrument.textQuestions !== null &&
+            instrument.textQuestions !== undefined &&
+            instrument.textQuestions.length > 0
+          "
+        >
+          <div class="tableContainer">
+            <h3 class="mt-5">Text Antworten</h3>
+            <table
+              class="table table-striped bg-white rounded border border-secondary list mx-auto"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th
+                    scope="col"
+                    *ngFor="let question of instrument.textQuestions"
+                  >
+                    {{ question.text }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let result of instrument.instrumentResults">
+                  <th scope="row">
+                    {{ result.created | date: "d/M/yy HH:mm" }}
+                  </th>
+                  <td *ngFor="let item of result.textResults">
+                    {{ item?.textValue }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            instrument.timeQuestions !== null &&
+            instrument.timeQuestions !== undefined &&
+            instrument.timeQuestions.length > 0
+          "
+        >
+          <div class="tableContainer">
+            <h3 class="mt-5">Uhrzeit Antworten</h3>
+            <table
+              class="table table-striped bg-white rounded border border-secondary list mx-auto"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th
+                    scope="col"
+                    *ngFor="let question of instrument.timeQuestions"
+                  >
+                    {{ question.text }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let result of instrument.instrumentResults">
+                  <th scope="row">
+                    {{ result.created | date: "d/M/yy HH:mm" }}
+                  </th>
+                  <td *ngFor="let item of result.timeResults">
+                    {{ item?.dateValue | date: "HH:mm" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button [routerLink]="routerLinkBack" class="mt-5 mb-5 btn col-2">
+    Zurück
+  </button>
+</div>

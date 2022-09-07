@@ -1,0 +1,34 @@
+.md-fab-bottom-right{
+  position: fixed !important;
+  right: 32px; /* Add this and change value to set the margin you want */
+  bottom: 32px;
+}
+
+table {
+  ::ng-deep .mat-checkbox-ripple .mat-ripple-element {
+    background-color: black !important;
+  }
+  
+  ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: black !important;
+  }
+  
+  ::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: black !important;
+  }
+  
+  th, td {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  th  {
+    background-color: rgb(92, 186, 55);
+    color: white;
+    font-size: small;
+  }
+
+  tr:hover  {
+    background-color: #c4c4c4;
+  }
+}

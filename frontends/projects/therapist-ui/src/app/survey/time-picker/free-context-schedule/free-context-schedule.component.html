@@ -1,0 +1,92 @@
+<div class="container">
+    <form #timeSheetForm="ngForm" class="w-80 container justify-content-center align-items-start">
+        <div class="row ps-5 pe-5">
+            <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                <div class="p-3 w-100 border">
+                    <div class="d-flex flex-column justify-content-center align-items-start">
+                        <h4 class="">Datum - Zeitspanne</h4>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Zeitspanne</mat-label>
+                            <mat-date-range-input class="date-range" [rangePicker]="picker" [min]="minDate">
+                                <input matStartDate
+                                       #startDateInput="ngModel"
+                                       [(ngModel)]="dataSet.dateRange[0]"
+                                       (dateChange)="onDataSetChange(); onRangeChanged()"
+                                       placeholder="Startdatum"
+                                       name="startDate"
+                                       required   />
+                                <input matEndDate
+                                       #endDateInput="ngModel"
+                                       [(ngModel)]="dataSet.dateRange[1]"
+                                       (dateChange)="onDataSetChange(); onRangeChanged()"
+                                       placeholder="Enddatum"
+                                       name="endDate"
+                                       required/>
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+
+                            <mat-error *ngIf="!startDateInput.valid">Ungültiges Startdatum</mat-error>
+                            <mat-error *ngIf="!endDateInput.valid">Ungültiges Enddatum</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="w-100 p-3 border mt-3">
+                    <div class="d-flex flex-column justify-content-center align-items-start">
+                        <h4 class="mt-2">Tage</h4>
+                        <div class="mb-2">
+                            <ng-container *ngFor="let element of DISPLAY_DAYS" class="p-4">
+                                <button [disabled]="element.disabled"
+                                        (click)="element.in = !element.in; toggleDays(element); onDataSetChange()"
+                                        [ngClass]="element.in ? 'in' : 'out'">
+                                    {{ element.title }}
+                                </button>
+                            </ng-container>
+                        </div>
+                        <mat-error *ngIf="dataSet.repeatDays.length === 0">Befragung wird an jedem Tag gestellt</mat-error>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                <div class="w-100 p-3 border d-flex flex-column justify-content-center align-items-start">
+                    <h4 class="">Uhrzeit</h4>
+                    <div><input #mandatoryInput="ngModel"
+                                [(ngModel)]="dataSet.isMandatory"
+                                (change)="onDataSetChange()"
+                                name="mandatoryInput"
+                                class="mr-2 mb-2"
+                                type="checkbox"/>Zeitfenster verpflichtend</div>
+
+                    <div *ngFor="let timePick of dataSet.timePicks; index as i">
+                        <mat-form-field class="example-full-width mr-2">
+                            <input matInput
+                                   #startTime="ngModel"
+                                   type="time"
+                                   [(ngModel)]="timePick.start"
+                                   (change)="onDataSetChange()"
+                                   name="startTime{{i}}"
+                                   placeholder="Anfang"
+                                   required/>
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width mr-2">
+                            <input matInput
+                                   #endTime="ngModel"
+                                   type="time"
+                                   [(ngModel)]="timePick.end"
+                                   (change)="onDataSetChange()"
+                                   name="endTime{{i}}"
+                                   placeholder="Ende"
+                                   required/>
+                        </mat-form-field>
+                        <button [disabled]="dataSet.timePicks.length === 1"
+                                class="clear-btn"
+                                (click)="removeTime(i); onDataSetChange()">X</button>
+                    </div>
+                    <button class="btn mt-3" (click)="addTime(); onDataSetChange()">Zeitfenster hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

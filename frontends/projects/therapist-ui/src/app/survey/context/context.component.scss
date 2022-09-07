@@ -1,0 +1,20 @@
+.rootContainer  {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: stretch;
+
+  .meta {
+    display: flex;
+    width: 40vw;
+    margin-top: 20px;
+
+    form  {
+      width: 100%;
+
+      textarea  {
+        height: 500px;
+      }
+    }
+  }
+}

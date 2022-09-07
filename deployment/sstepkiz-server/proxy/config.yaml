@@ -1,0 +1,25 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+      preferServerCipherSuites: true
+      curvePreferences:
+        - secp384r1
+        - secp521r1
+      cipherSuites:
+        - TLS_AES_256_GCM_SHA384
+        - TLS_CHACHA20_POLY1305_SHA256
+http:
+  middlewares:
+    gzip:
+      compress: {}
+    secHeaders:
+      headers:
+        customResponseHeaders:
+          Expect-CT: max-age=31536000, enforce
+          X-Frame-Options: sameorigin
+          Referrer-Policy: no-referrer
+          X-XSS-Protection: 1; mode=block
+          Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+          X-Content-Type-Options: nosniff

@@ -1,0 +1,89 @@
+<div class="container text-center">
+  <div class="heart-rate-chart">
+    <span class="blue-span"> ⬤ Momentane Herzfrequenz: </span>
+    <span class="blue-span" *ngIf="this.heartRateData">{{this.heartRateData.heartRate}}</span>
+    <br>
+    <span class="green-span"> ⬤ Mittlere Herzfrequenz: </span>
+    <span class="green-span" *ngIf="this.heartRateData">{{this.heartRateData.meanHr}}</span>
+    <br>
+    <canvas #chartHr width="300" height="150"></canvas>
+  </div>
+
+  <div class="hrv-chart">
+    <span class="blue-span">⬤ SDNN</span> 
+    <span class="green-span"> ⬤ RMSSD</span>
+    <br>
+    <canvas #chartHrv width=300 height=150></canvas>
+    <br>
+    <div class="hrv-values" *ngIf="this.heartRateData">
+      <b [style.color]="'red'" *ngIf="!this.heartRateData.consistent">
+        Die Werte sind erst nach 5 Minuten valide.
+      </b>
+<!--
+      <br>
+      <div>
+        <b>Zeit Domäne:</b>
+        <br>
+        <span class="time-domain">
+          SDNN: {{this.heartRateData.sdnn}}
+          <br>
+          RMSSD: {{this.heartRateData.rmssd}}
+          <br>
+          NN50 | pNN50: {{this.heartRateData.nn50}} | {{this.heartRateData.pnn50}}
+          <br>
+          Anzahl der Messungen: {{this.heartRateData.sampleSize}}
+        </span>
+        <br>
+        <b>Frequenz Domäne:</b>
+        <br>
+        <span class="freq-domain">
+          VLF | LF | HF : {{this.heartRateData.vlf}} | {{this.heartRateData.lf}} | {{this.heartRateData.hf}}
+          <br>
+          LF-HF-Ratio: {{this.heartRateData.lfHfRatio}}
+        </span>
+      </div>
+-->
+    </div>
+  </div>
+
+  <div class="baseline-control">
+    <button *ngIf="baselineState === 'stopped'"
+        mat-icon-button
+        aria-label="Startet die Baseline Messung"
+        matTooltip="Baseline Messung starten"
+        (click)="baselineStart()">
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+    <button *ngIf="baselineState === 'running'"
+        mat-icon-button
+        aria-label="Stopt die Baseline Messung"
+        matTooltip="Baseline Messung stoppen"
+        (click)="baselineStop()">
+      <mat-icon>stop</mat-icon>
+    </button>
+    <button *ngIf="baselineState !== 'stopped'"
+        mat-icon-button
+        aria-label="Setzt die Baseline Messung zurück"
+        matTooltip="Baseline Messung zurücksetzen"
+        (click)="baselineReset()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  <!--
+    <br>
+    <span>HR: {{ hrAvg }}</span>
+    <span>MeanHR: {{ meanHrAvg }}</span>
+    <span>SDNN: {{ sdnnAvg }}</span>
+    <span>RMSSD: {{ rmssdAvg }}</span>
+  -->
+  </div>
+
+  <!-- [themeType]="data.themeType" -->
+  <lib-piechart *ngIf="vlf !== undefined && lf !== undefined && hf !== undefined"
+    [vlf]="vlf"
+    [lf]="lf"
+    [hf]="hf"
+    [proportional]="false"
+    [animations]="false"
+    [colorPaletteFlag]="true">
+  </lib-piechart>
+</div>

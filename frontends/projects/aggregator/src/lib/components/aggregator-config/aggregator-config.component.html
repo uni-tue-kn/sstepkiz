@@ -1,0 +1,27 @@
+<ng-content></ng-content>
+
+<label>
+  <span>pull interval (in seconds):</span>
+  <input type="number" [(ngModel)]="config.pullInterval">
+</label>
+
+<div>
+  <span>upload times:</span>
+
+  <ul>
+    <li *ngFor="let time of config.uploadTimes; let i = index" [attr.data-index]="i">
+      <span>{{ time }}</span>
+      <button (click)="removeTime(i)">x</button>
+    </li>
+    <li>
+      <input [(ngModel)]="newTime">
+      <button (click)="addTime()">ok</button>
+    </li>
+  </ul>
+
+</div>
+
+<div>
+  <button (click)="applyChanges()">Apply</button>
+  <button (click)="delete.emit()">Delete</button>
+</div>

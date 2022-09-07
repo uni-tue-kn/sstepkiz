@@ -1,0 +1,78 @@
+<main role="main">
+  <header>
+    <h1 class="headline">Users</h1>
+
+    <span class="spacer"></span>
+
+    <button align="right" mat-icon-button matTooltip="Load users" role="button" type="button" (click)="loadUsers()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </header>
+
+  <mat-form-field appearance="fill" class="filter">
+    <mat-label>Filter</mat-label>
+
+    <mat-icon matPrefix>filter_alt</mat-icon>
+    <input #filterInput autocomplete="username" autofocus cdkFocusInitial matInput role="search" type="search"
+      (keyup)="applyFilter($event)">
+
+    <button mat-icon-button matSuffix matTooltip="Clear" tabindex="-1" type="button" (click)="clearFilter()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-progress-bar *ngIf="isLoadingResults" role="progressbar" mode="indeterminate"></mat-progress-bar>
+
+  <table mat-table matSort multiTemplateDataRows [dataSource]="dataSource">
+    <ng-container matColumnDef="username">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Username</th>
+      <td *matCellDef="let user" mat-cell>{{ user.username }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="group">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Group</th>
+      <td *matCellDef="let user" mat-cell>{{ user.group }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th *matHeaderCellDef mat-header-cell>Actions</th>
+      <td *matCellDef="let user" mat-cell>
+        <button mat-icon-button matTooltip="Edit" (click)="resetPassword(user); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Delete" (click)="deleteUser(user); $event.stopPropagation()">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="permissions">
+      <td *matCellDef="let user" mat-cell [attr.colspan]="displayedColumns.length">
+        <div class="permissions-container" [@detailExpand]="expandedUserId == user.userId ? 'expanded' : 'collapsed'">
+          <app-permissions *ngIf="expandedUserId == user.userId" [user]="user"></app-permissions>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr *matNoDataRow class="mat-row">
+      <td class="mat-cell empty-cell" [attr.colspan]="displayedColumns.length">
+        <span *ngIf="dataSource.filter">No matching users found for filter "{{ filterInput.value }}"</span>
+        <span *ngIf="!dataSource.filter">No users found</span>
+      </td>
+    </tr>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let user; columns: displayedColumns;" class="user-row" mat-row
+      [class.expanded]="expandedUserId === user.userId"
+      (keyup)="($event.keyCode === 13 && expandedUserId = expandedUserId === user.userId ? null : user.userId) || ($event.keyCode === 46 && deleteUser(user))"
+      (click)="expandedUserId = expandedUserId === user.userId ? null : user.userId">
+    </tr>
+    <tr *matRowDef="let user; columns: ['permissions'];" class="row-permissions" mat-row
+      [class.expanded]="expandedUserId === user.userId"></tr>
+  </table>
+</main>
+
+<button class="bottom-right-fab extended-fab-button" mat-fab matTooltip="Create User" (click)="createUser()">
+  <mat-icon>add</mat-icon>
+  <span>create</span>
+</button>

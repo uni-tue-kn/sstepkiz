@@ -1,0 +1,17 @@
+<div class="container text-center list">
+    <app-title title="Neue Befragung anlegen"></app-title>
+    <form #questionForm="ngForm" class="mb-5">
+        <div class="form-group text-left">
+            <label class="mt-3" for="title">Name der Befragung</label>
+            <input [(ngModel)]="context.name" type="text" name="title" class="form-control mt-2" placeholder="Name der Befragung">
+            <label class="mt-3" for="descriptionText">Beschreibungstext</label>
+            <textarea [(ngModel)]="context.descriptionText" name="descriptionText" id="descriptionText" rows="7" placeholder="Beschreibungstext"
+                class="form-control mt-2"></textarea>
+        </div>
+    </form>
+    <div class="row justify-content-between ">
+        <button [routerLink]="routerLinkBack" class="m-3 btn col-2">Zurück</button>
+        <button (click)="save()" [disabled]="context.name == null" class="m-3 btn col-2">Weiter</button>
+    </div>
+    <!-- <app-instrument-overview [listElements]="listElements" (saveEmitter)="save($event)"></app-instrument-overview> -->
+</div>

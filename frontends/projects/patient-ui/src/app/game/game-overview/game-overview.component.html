@@ -1,0 +1,60 @@
+<svg
+  class="scaling-svg"
+  viewBox="0 0 150 100"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <image
+    y="0"
+    x="0"
+    height="100"
+    width="150"
+    id="image172"
+    href="../../../assets/game/Map_Neu_leer_transparent.png"
+  ></image>
+  <g *ngFor="let item of activeMaps" transform="scale(0.5)">
+    <svg
+      (click)="route(item)"
+      [attr.x]="maps[item].x"
+      [attr.y]="maps[item].y"
+      width="16"
+      height="16"
+      fill="#b5d932"
+      class="bi bi-unlock-fill"
+      style="cursor: pointer"
+    >
+      <path
+        d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"
+      />
+    </svg>
+  </g>
+  <g *ngFor="let item of inactiveMaps" transform="scale(0.5)">
+    <svg
+      [attr.x]="maps[item].x"
+      [attr.y]="maps[item].y"
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      class="bi bi-lock-fill"
+    >
+      <path
+        d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"
+      />
+    </svg>
+  </g>
+</svg>
+
+<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true" #modal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Sammelbuch</h5>
+      </div>
+      <div class="modal-body">Bitte dreh deinen Bildschirm</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Okay</button>
+      </div>
+    </div>
+  </div>
+</div>

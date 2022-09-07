@@ -1,0 +1,43 @@
+.top {
+	background-image: url("../../../assets/header/topHintergrund.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: white;
+	height: 15em;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	text-align: center;
+}
+
+.navIcon p {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.navIcon {
+	//position: fixed;
+	position: absolute;
+	// bottom: 2em;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	// margin-top:auto;
+}
+
+.dont {
+	//position: fixed;
+	position: absolute;
+	bottom: 6em;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	margin-top: auto;
+}
+
+.close {
+	color: white;
+	font-size: 25px;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}

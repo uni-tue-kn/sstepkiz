@@ -1,0 +1,46 @@
+<span>{{ permission.subjectId }}</span>
+
+<br>
+
+<label>
+  <span>ECG</span>
+  <input
+    type="checkbox"
+    [checked]="permission.ecg"
+    (change)="permission.ecg = !permission.ecg">
+</label>
+
+<br>
+
+<label>
+  <span>EDA</span>
+  <input
+    type="checkbox"
+    [checked]="permission.eda"
+    (change)="permission.eda = !permission.eda">
+</label>
+
+<br>
+
+<label>
+  <span>EyeTracking</span>
+  <input
+    type="checkbox"
+    [checked]="permission.eyetracking"
+    (change)="permission.eyetracking = !permission.eyetracking">
+</label>
+
+<br>
+
+<label>
+  <span>Movement</span>
+  <input
+    type="checkbox"
+    [checked]="permission.movement"
+    (change)="permission.movement = !permission.movement">
+</label>
+
+<br>
+
+<button (click)="updatePermission()">Modify</button>
+<button (click)="removePermission()">Delete</button>

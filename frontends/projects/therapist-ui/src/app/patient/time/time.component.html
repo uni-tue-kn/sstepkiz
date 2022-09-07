@@ -1,0 +1,20 @@
+<div class="container text-center">
+  <app-title title="Zeiten" text="Hier können Sie sehen, zu welchen Zeiten der Patient Übungen durchgeführt hat."></app-title>
+  <button [routerLink]="backLink" class="mt-2 mb-3 btn col-2">Zurück</button>
+  <table class="table table-striped shadow bg-white rounded border border-secondary list mx-auto">
+      <thead>
+        <tr>
+          <th scope="col">Datum</th>
+          <th scope="col">Start</th>
+          <th scope="col">Ende</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of listElements">
+          <th scope="row">{{item.start || item.end | date:'d/M/yy'}}</th>
+          <td>{{item.start || null | date:'HH:mm'}}</td>
+          <td>{{item.end || null | date:'HH:mm'}}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>

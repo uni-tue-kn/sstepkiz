@@ -1,0 +1,9 @@
+<div class="container text-center">
+    <app-title title="Patienten" [text]="text"></app-title>
+    <ul class="list-group shadow bg-white rounded border border-secondary list mx-auto">
+        <li class="list-group-item"  *ngFor="let element of listElements">
+            <a (click)="setPatient(element)" [routerLink]="routerLink">{{element.name}}</a>
+        </li>
+    </ul>
+    <button [routerLink]="routerLinkBack" class="m-3 btn col-2">Zurück</button>
+</div>

@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Löschen</h1>
+<div mat-dialog-content>
+    <p>Wenn Sie jetzt auf löschen klicken, wird der Eintrag gelöscht und Sie können diesen Schritt nicht wieder Rückgänig machen.
+</div>
+    <div mat-dialog-actions class="row justify-content-around mt-5">
+        <div class="col-4">
+            <button mat-button class="btn" (click)="onNoClick()">Nicht Löschen</button>
+        </div>
+        <div class="col-4">
+            <button mat-button class="btn" (click)="delete()">Löschen</button>
+        </div>
+    </div>

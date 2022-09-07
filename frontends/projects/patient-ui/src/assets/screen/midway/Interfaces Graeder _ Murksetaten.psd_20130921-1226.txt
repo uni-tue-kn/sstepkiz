@@ -1,0 +1,2 @@
+
+layers with umlauts in name were renamed

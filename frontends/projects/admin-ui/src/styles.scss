@@ -1,0 +1,48 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+app-root {
+  height: 100%;
+}
+main {
+  margin: 1em auto 6em;
+  max-width: 60em;
+  padding: 1em;
+}
+
+.bottom-right-fab {
+  position: fixed !important;
+  bottom: 1.5em;
+  right: 2em;
+}
+.extended-fab-button span {
+  display: none;
+}
+.spacer {
+  flex: 1 auto;
+}
+
+@media screen and (min-width: 60em) {
+  .extended-fab-button {
+    width: unset !important;
+    padding: 0 26px !important;
+    border-radius: 29px !important;
+
+    .mat-icon {
+      margin-right: 10px;
+    }
+
+    span {
+      display: unset;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+  }
+ 
+  .bottom-right-fab {
+    bottom: 2em;
+    right: 2.5em;
+  }
+}

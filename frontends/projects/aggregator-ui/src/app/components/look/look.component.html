@@ -1,0 +1,30 @@
+<video #preview autoplay playsinline class="stream-preview" [srcObject]="stream"></video>
+
+<button *ngIf="muted === false" mat-icon-button (click)="mute()">
+  <mat-icon>visibility_off</mat-icon>
+</button>
+<button *ngIf="muted === true" mat-icon-button (click)="unmute()">
+  <mat-icon>visibility</mat-icon>
+</button>
+
+<br>
+
+<mat-checkbox [(ngModel)]="showCalibrator" color="primary">
+  Tracker anzeigen
+</mat-checkbox >
+
+<div *ngIf="showCalibrator" class="calibrator-border" (click)="showCalibrator = false">
+  <div class="calibrator">
+    <svg viewBox="0 0 8 8" style="background: #000;">
+      <rect x="2" y="2" width="2" height="2" style="fill:#fff;"/>
+      <rect x="4" y="4" width="1" height="1" style="fill:#fff;"/>
+    </svg>
+  </div>
+  <div class="calibrator-controls">
+    <video autoplay playsinline class="calibrator-stream-preview" [srcObject]="stream"></video>
+    <br>
+    <mat-checkbox [(ngModel)]="showCalibrator" color="primary">
+      Tracker anzeigen
+    </mat-checkbox >
+  </div>
+</div>

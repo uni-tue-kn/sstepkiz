@@ -1,0 +1,17 @@
+<div class="container">
+  <app-observation *ngIf="observation" class="row justify-content-center" [observation]="observation" [checkboxsChecked]="checkboxsChecked"></app-observation>
+  <!--<div class="container mt-5">
+    <div class="row mt-5 justify-content-center">
+      <button *ngIf="observation?.optional" (click)="skip()" class="btn btn-patient">Nicht beantworten</button>
+    </div>
+    <div class="row navIcon p-3">
+      <p class="col-4">{{ observation?.observationNumber }}/{{ lengthObs }}</p>
+      <button (click)="getNextObservation()" [disabled]="!isValid()" class="btn btn-patient col-4">Weiter</button>
+    </div>
+  </div>-->
+  <div class="actionsContainer">
+    <p>{{ observation?.observationNumber }}/{{ lengthObs }}</p>
+    <button (click)="getNextObservation()" [disabled]="!isValid()" class="btn btn-patient">Weiter</button>
+    <button *ngIf="observation?.optional" (click)="skip()" class="btn btnSkip">Nicht beantworten</button>
+  </div>
+</div>

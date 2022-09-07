@@ -1,0 +1,57 @@
+.observation{
+    text-align: center;
+    width: 100%;
+}
+
+.textarea{
+    width: 100%;
+    display: block;
+}
+
+.justify-content-space-evenly{
+    justify-content:space-evenly;
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  .singleChoiceOptionsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    .singleChoiceOption {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+  
+      label {
+        margin-bottom: 0;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.scalaContainer {
+  display: flex;
+  flex-direction: column !important;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    mat-slider  {
+      width: 20vw;
+    }
+  }
+}

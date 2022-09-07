@@ -1,0 +1,80 @@
+<div class="container text-center">
+    <div *ngIf="sender">
+        <button class="btn m-3 col-4" (click)="call(sender.userId, sender.socketId, modes.Monitor); wait=true">Verbinden</button>
+        <div *ngIf="!isCallActive && wait">
+           <p>
+            Warte auf das Verbinden von deinem Therapeuten.
+           </p> 
+        </div>
+        <div *ngIf="isCallActive">
+            <p>Du bist verbunden</p>
+        </div>
+    </div>
+    <div class="card text-center">
+        <h5 class="m-3">Aktive Sensoren</h5>
+        <div *ngIf="messages">
+            <div *ngFor="let c of messages['mon']">
+                <div *ngIf="c.type.toString() != 'mon' && c.active">
+                    <div class="row m-3">
+                        <svg height="1em" width="1em">
+                            <circle cx="8" cy="8" r="8" stroke="black" stroke-width="1" fill="#B5D932" />
+                        </svg>
+                        <h6 class="pl-3">{{sensorNames[c.type.toString()]}}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="rxChannels">
+            <div *ngFor="let c of rxChannels">
+                <div *ngIf="c.type.toString() != 'mon'">
+                    <span>{{ messages | json }}</span>
+
+                    <span>{{ messages[c.type.toString()][messages[c.type.toString()].length - 1] | json }}</span>
+                    
+                    <div class="row m-3">
+                        <svg height="1em" width="1em">
+                            <circle cx="8" cy="8" r="8" stroke="black" stroke-width="1" fill="#B5D932" />
+                        </svg>
+                        <h6 class="pl-3">{{sensorNames[c.type.toString()]}}</h6>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- <div *ngFor="let sensor of sensors">
+            <div class="row m-3">
+                <svg height="1em" width="1em" *ngIf="sensor.activ; else notactiv">
+                    <circle cx="8" cy="8" r="8" stroke="black" stroke-width="1" fill="#B5D932" />
+                </svg>
+                <ng-template #notactiv>
+                    <svg height="1em" width="1em">
+                        <circle cx="8" cy="8" r="8" stroke="black" stroke-width="1" fill="white" />
+                    </svg>
+                </ng-template>
+                <h6 class="pl-3">{{sensor.name}}</h6>
+            </div>
+            <ng-template #notactiv>
+                Es ist kein Senore aktiv
+            </ng-template>
+        </div> -->
+
+    </div>
+
+    <!-- <div>
+        <h2>RX Channels</h2>
+        <ul *ngIf="rxChannels">
+            <li *ngFor="let c of rxChannels">
+                <span>{{ c.type.toString() }}:</span>
+                <button (click)="c.close()">Close</button>
+                <div *ngIf="c.type.toString() === 'mov'">
+                    <span>{{ messages[c.type.toString()][messages[c.type.toString()].length - 1] | json }}</span>
+                </div>
+                <ng-container *ngIf="c.type.toString() !== 'mov'">
+                    <p *ngFor="let m of messages[c.type.toString()]">{{ m | json }}</p>
+                </ng-container>
+            </li>
+        </ul>
+
+        <button class="btn m-3 col-4" (click)="closeMonitor()">Trennen</button>
+    </div> -->
+</div>

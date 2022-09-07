@@ -1,0 +1,35 @@
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.grid-item {
+  display: inline-flex;
+  padding: .5em;
+}
+.grid-item-content {
+  height: 100%;
+  width: 100%;
+}
+
+.spinner:before {
+  animation: spinner .8s linear infinite;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: #000000;
+  box-sizing: border-box;
+  content: '';
+  height: 20px;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  position: absolute;
+  top: 50%;
+  width: 20px;
+}
+
+.shift-right {
+  float: right;
+  display: flex;
+}

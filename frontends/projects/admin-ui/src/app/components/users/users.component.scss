@@ -1,0 +1,32 @@
+table {
+  width: 100%;
+}
+header {
+  display: flex;
+  padding: 0 0.5em;
+}
+.filter {
+  width: 100%;
+}
+.empty-cell {
+  text-align: center;
+}
+.mat-column-actions {
+  width: 6em;
+}
+.permissions-container {
+  max-height: 30em;
+  overflow-y: auto;
+}
+.row-permissions {
+  height: 0;
+}
+.row-permissions:not(.expanded) > td {
+  border: none;
+}
+.row-permissions.expanded {
+  height: auto;
+}
+.user-row.expanded > td {
+  border-bottom: none;
+}
