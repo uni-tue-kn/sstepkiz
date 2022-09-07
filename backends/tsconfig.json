@@ -1,0 +1,100 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "Node",
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "paths": {
+      "@libs/auth": [
+        "libs/auth/src"
+      ],
+      "@libs/auth/*": [
+        "libs/auth/src/*"
+      ],
+      "@libs/apdm": [
+        "libs/apdm/src"
+      ],
+      "@libs/apdm/*": [
+        "libs/apdm/src/*"
+      ],
+      "@libs/client-auth": [
+        "libs/client-auth/src"
+      ],
+      "@libs/client-auth/*": [
+        "libs/client-auth/src/*"
+      ],
+      "@libs/common": [
+        "libs/common/src"
+      ],
+      "@libs/common/*": [
+        "libs/common/src/*"
+      ],
+      "@libs/db": [
+        "libs/db/src"
+      ],
+      "@libs/db/*": [
+        "libs/db/src/*"
+      ],
+      "@libs/logger": [
+        "libs/logger/src"
+      ],
+      "@libs/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@libs/look": [
+        "libs/look/src"
+      ],
+      "@libs/look/*": [
+        "libs/look/src/*"
+      ],
+      "@libs/movesense": [
+        "libs/movesense/src"
+      ],
+      "@libs/movesense/*": [
+        "libs/movesense/src/*"
+      ],
+      "@libs/rtc-sender": [
+        "libs/rtc-sender/src"
+      ],
+      "@libs/rtc-sender/*": [
+        "libs/rtc-sender/src/*"
+      ],
+      "@libs/sensor-api": [
+        "libs/sensor-api/src"
+      ],
+      "@libs/sensor-api/*": [
+        "libs/sensor-api/src/*"
+      ],
+      "@libs/udp-connector": [
+        "libs/udp-connector/src"
+      ],
+      "@libs/udp-connector/*": [
+        "libs/udp-connector/src/*"
+      ],
+      "@libs/usb-device": [
+        "libs/usb-device/src"
+      ],
+      "@libs/usb-device/*": [
+        "libs/usb-device/src/*"
+      ],
+      "@sstepkiz": [
+        "../shared/dist"
+      ],
+      "@sstepkiz/*": [
+        "../shared/dist/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

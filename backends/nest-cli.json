@@ -1,0 +1,147 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/aggregator/src",
+  "monorepo": true,
+  "root": "apps/aggregator",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/aggregator/tsconfig.app.json"
+  },
+  "projects": {
+    "aggregator": {
+      "type": "application",
+      "root": "apps/aggregator",
+      "entryFile": "main",
+      "sourceRoot": "apps/aggregator/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/aggregator/tsconfig.app.json"
+      }
+    },
+    "gamification": {
+      "type": "application",
+      "root": "apps/gamification",
+      "entryFile": "main",
+      "sourceRoot": "apps/gamification/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gamification/tsconfig.app.json"
+      }
+    },
+    "signalling": {
+      "type": "application",
+      "root": "apps/signalling",
+      "entryFile": "main",
+      "sourceRoot": "apps/signalling/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/signalling/tsconfig.app.json"
+      }
+    },
+    "apdm": {
+      "type": "library",
+      "root": "libs/apdm",
+      "entryFile": "index",
+      "sourceRoot": "libs/apdm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/apdm/tsconfig.lib.json"
+      }
+    },
+    "auth": {
+      "type": "library",
+      "root": "libs/auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auth/tsconfig.lib.json"
+      }
+    },
+    "client-auth": {
+      "type": "library",
+      "root": "libs/client-auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/client-auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/client-auth/tsconfig.lib.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "db": {
+      "type": "library",
+      "root": "libs/db",
+      "entryFile": "index",
+      "sourceRoot": "libs/db/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/db/tsconfig.lib.json"
+      }
+    },
+    "logger": {
+      "type": "library",
+      "root": "libs/logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+      }
+    },
+    "look": {
+      "type": "library",
+      "root": "libs/look",
+      "entryFile": "index",
+      "sourceRoot": "libs/look/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/look/tsconfig.lib.json"
+      }
+    },
+    "movesense": {
+      "type": "library",
+      "root": "libs/movesense",
+      "entryFile": "index",
+      "sourceRoot": "libs/movesense/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/movesense/tsconfig.lib.json"
+      }
+    },
+    "rtc-sender": {
+      "type": "library",
+      "root": "libs/rtc-sender",
+      "entryFile": "index",
+      "sourceRoot": "libs/rtc-sender/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/rtc-sender/tsconfig.lib.json"
+      }
+    },
+    "sensor-api": {
+      "type": "library",
+      "root": "libs/sensor-api",
+      "entryFile": "index",
+      "sourceRoot": "libs/sensor-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sensor-api/tsconfig.lib.json"
+      }
+    },
+    "udp-connector": {
+      "type": "library",
+      "root": "libs/udp-connector",
+      "entryFile": "index",
+      "sourceRoot": "libs/udp-connector/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/udp-connector/tsconfig.lib.json"
+      }
+    },
+    "usb-device": {
+      "type": "library",
+      "root": "libs/usb-device",
+      "entryFile": "index",
+      "sourceRoot": "libs/usb-device/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/usb-device/tsconfig.lib.json"
+      }
+    }
+  }
+}

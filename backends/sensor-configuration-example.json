@@ -1,0 +1,29 @@
+{
+  "ecg": {
+    "MovesenseEcg": {}
+  },
+  "etk": {
+    "Look": {}
+  },
+  "mov": {
+    "Apdm": {
+      "sensors": [
+        {
+          "id": 10730,
+          "label": "Left hand"
+        },
+        {
+          "id": 10729,
+          "label": "Right hand"
+        }
+      ],
+      "ap": {
+        "ch": 60,
+        "sampling_rate": 128
+      },
+      "erase": false,
+      "streaming": false
+    },
+    "MovesenseMov": {}
+  }
+}
